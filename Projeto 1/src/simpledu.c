@@ -7,16 +7,13 @@
 #include <fcntl.h>
 #include <string.h>
 #include <signal.h>
-<<<<<<< HEAD
 #include "args.h"
 
-=======
 #include "simpledu.h"
->>>>>>> dd17a741eba84d6d7515b0df6bcc0880cbf5f07f
 
 #define BUFFER_SIZE 512 
 
-void sigint_handler(int signo)
+/* void sigint_handler(int signo)
 {
     write(STDOUT_FILENO, "Are you sure you want to exit?\n ", 33);
 }
@@ -29,7 +26,7 @@ void sigcont_handler(int signo)
 void sigterm_handler(int signo)
 {
     write(STDOUT_FILENO, "Terminating processes...\n", 26);
-}
+}  */
 
 int main(int argc, char *argv[], char *envp[])
 {
@@ -67,6 +64,6 @@ int main(int argc, char *argv[], char *envp[])
 
     
     Args args = process_args(argc,argv);
+    return 0;
 
-    
 }

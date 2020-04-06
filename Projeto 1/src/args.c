@@ -96,7 +96,36 @@ Args process_args(int argc, char *argv[]){
 }
 
 
-char **get_cmd_args(Args args){
-	char **cmd_args;
+char** get_cmd_args(Args args){
 	
+    char ** cmd_args = malloc(7 * sizeof(char*));
+    for (int i =0 ; i < 7; ++i)
+        cmd_args[i] = malloc(30* sizeof(char));
+    
+    int i=0;
+	if(args.all==1){
+		strcpy(cmd_args[i],"-a");
+		i++;
+	}
+	if(args.bytes==1){
+		strcpy(cmd_args[i],"-b");
+		i++;
+	}
+	if(args.block_size!=1024){
+		sprintf(cmd_args[i],"--block-size=%s",args.block_size);
+		i++;
+	}
+	if(args.dereference==1){
+		strcpy(cmd_args[i],"-L");
+		i++;
+	}
+	if(args.sep_dirs==1){
+		strcpy(cmd_args[i],"-S");
+		i++;
+	}
+	if(args.max_depth!=__INT_MAX__){
+		sprintf(cmd_args[i],"--max_depth=%s",args.max_depth);
+		i++;
+	}
+	return cmd_args;
 }
