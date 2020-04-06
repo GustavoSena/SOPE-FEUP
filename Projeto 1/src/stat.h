@@ -1,3 +1,5 @@
+#pragma once
+
 #include <stdio.h> 
 #include <unistd.h> 
 #include <stdlib.h> 
@@ -9,6 +11,7 @@
 #include <stdbool.h>
 #include <dirent.h>
 #include "args.h"
+#include "result.h"
 
 int block_size; 
 
@@ -24,4 +27,8 @@ int getSymbolicLinkInfo(char * pathname);
 
 bool isDirectory(char * pathname);
 
+bool isFile(char * pathname);
+
 int getDirectoryInfo(char * pathname, int max_depth, Args arg); 
+
+int setBlockSize(int size);

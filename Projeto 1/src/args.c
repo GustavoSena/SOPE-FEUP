@@ -102,7 +102,7 @@ char** get_cmd_args(Args args){
     for (int i =0 ; i < 7; ++i)
         cmd_args[i] = malloc(30* sizeof(char));
     
-    int i=0;
+    int i=1;
 	if(args.all==1){
 		strcpy(cmd_args[i],"-a");
 		i++;
@@ -112,7 +112,7 @@ char** get_cmd_args(Args args){
 		i++;
 	}
 	if(args.block_size!=1024){
-		sprintf(cmd_args[i],"--block-size=%s",args.block_size);
+		sprintf(cmd_args[i],"--block-size=%d",args.block_size);
 		i++;
 	}
 	if(args.dereference==1){
@@ -124,7 +124,7 @@ char** get_cmd_args(Args args){
 		i++;
 	}
 	if(args.max_depth!=__INT_MAX__){
-		sprintf(cmd_args[i],"--max_depth=%s",args.max_depth);
+		sprintf(cmd_args[i],"--max_depth=%d",args.max_depth - 1);
 		i++;
 	}
 	return cmd_args;

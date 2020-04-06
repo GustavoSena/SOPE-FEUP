@@ -9,7 +9,7 @@ int getInfo(char * pathname) //Usar isto para symbolic links se -L for passada c
         exit(1);
     }
     int size;
-    if(block_size == 1)//se quisermos apenas apresentar o nº real de bytes
+    if(block_size == 1024)//se quisermos apenas apresentar o nº real de bytes
     {
         size = info.st_size;
         
@@ -17,14 +17,11 @@ int getInfo(char * pathname) //Usar isto para symbolic links se -L for passada c
     else
     {
         int n_bytes = info.st_size;
-        if (n_bytes%block_size==0)
-            size = n_bytes/block_size;
-        else
-        {
-            size = n_bytes/block_size + 1;
-        }
-        
+        size = n_bytes/block_size;
+        if (n_bytes%block_size != 0)
+            size++;
     }
+    printResult(size, pathname);
     return size;
     
 }
@@ -57,22 +54,18 @@ int getSymbolicLinkInfo(char * pathname)
         exit(0);
     }
     int size;
-    if (block_size == 1)
+    if (block_size == 1024)
     {
         size = info.st_size;
     }
     else
     {
         int n_bytes = info.st_size;
-        if (n_bytes%block_size==0)
-            size = n_bytes/block_size;
-        else
-        {
-            size = n_bytes/block_size + 1;
-        }
+        size = n_bytes/block_size;
         
     }
-    return size;
+    printResult(size, pathname);
+    return 0;
     
 }
 
@@ -94,16 +87,34 @@ bool isDirectory(char * pathname)
 }
 
 
+bool isFile(char * pathname)
+{
+    struct stat info;
+    if(lstat(pathname, &info)<0)
+    {
+        printf("Error\n");
+        exit(0);
+    }
+    if(S_ISREG(info.st_mode))
+        return true;
+    else
+    {
+        return false;
+    }
+
+}
+
+
 int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
 {
     if (max_depth == 0)
-        return getInfo(pathname);
+        getInfo(pathname);
     else
     {
-        int arr[50];
+        //int arr[50];
         pid_t pid;
-        int i = 0;
-        int status;
+        //int i = 0;
+        //int status;
         DIR * newDir = opendir(pathname); //apontador para os conteudos da pasta
         if(readdir(newDir) ==  NULL)
         {
@@ -112,21 +123,25 @@ int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
         }
         struct dirent *dp;
         char *filename;
+        printf("Teste 1\n");
+        //Erro - só lê um nome, pode ter que ler vários, adicionar ao codigo de teste do diretorio um for loop antes com um array dos nomes dos ficheiros ou diretorios
         while((dp = readdir(newDir) != NULL))
         {
             if ( !strcmp(dp->d_name, ".") || !strcmp(dp->d_name, "..") )
                 continue;
             else 
             {
-                filename = dp->d_name;
+                strcpy(filename, dp->d_name);
+                //filename = dp->d_name;
             }
         }
         closedir(newDir);
+        printf("Teste 2\n");
         char *newPathname = pathname;
         char barra[1] = {'/'};
         strcat(newPathname,barra);
         strcat(newPathname, filename);
-
+        printf("Teste 3\n");
         //usar o readdir //Ignorar o . e o .. dá o nome da pasta com d name da stat
         /**
          * d = opendir(".");
@@ -152,30 +167,44 @@ int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
             }
             else if (pid > 0) //processo pai
             {
+                printf("Teste 4 \n");
                 //waitpid(-1, &status, WNOHANG); //tira também os processos zombie
                 pid_t wtp;
                 int status = 0;
-                while((wtp = wait(&status)));
+                while((wtp = wait(&status))); //espera por todos os processos filhos
                 //termina aqui o processo pai
+                printf("Teste 5 \n");
                 exit(0);
 
             }
             else //processo filho
             {
                 //getDirectoryInfo(newPathname,max_depth-1);
-                char commands[7];
+                char **commands = get_cmd_args(arg);
+                strcpy(commands[0], newPathname);
+                printf("Teste 5\n");
                 execvp("simpledu", commands);
+                printf("Teste 6\n");
                 
             }
         }
         else
         {
-            return getInfo(newPathname);
+            getInfo(newPathname); //falta testar se é link simbólico
+            printf("Teste 7\n");
         }
         
 
 
     }
     
+    printf("Teste 8\n");
+    return 0;
 
+}
+
+int setBlockSize(int size)
+{
+    block_size = size;
+    return 0;
 }
