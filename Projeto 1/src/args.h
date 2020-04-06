@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <dirent.h>
+#include <sys/stat.h>
 
 typedef struct{
     int all;
@@ -16,6 +17,6 @@ typedef struct{
 
 Args process_args(int argc, char *argv[]);
 
-int exists_path(char *path);
+char** get_cmd_args(Args args);
 
 void print_usage();
