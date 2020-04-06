@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <dirent.h>
+
 typedef struct{
     int all;
     int bytes;
