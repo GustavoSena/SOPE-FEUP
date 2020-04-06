@@ -7,7 +7,7 @@
 #include <fcntl.h>
 #include <string.h>
 #include <signal.h>
-//#include "simpledu.h"
+#include "simpledu.h"
 
 #define BUFFER_SIZE 512 
 
