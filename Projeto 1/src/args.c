@@ -1,7 +1,7 @@
 #include "args.h"
 
 void print_usage(){
-	printf("Usage: simpledu [-l] [path] [-a] [-b] [-B size] [-L] [-S] [--max-depth=N]\n");
+	printf("Usage: simpledu -l [path] [-a] [-b] [-B size] [-L] [-S] [--max-depth=N]\n");
 }
 Args process_args(int argc, char *argv[]){
     Args args;
@@ -92,4 +92,11 @@ Args process_args(int argc, char *argv[]){
 		
     }
 	return args; 
+
+}
+
+
+char **get_cmd_args(Args args){
+	char **cmd_args;
+	
 }

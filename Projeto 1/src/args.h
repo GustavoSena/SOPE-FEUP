@@ -17,6 +17,6 @@ typedef struct{
 
 Args process_args(int argc, char *argv[]);
 
-
+void get_cmd_args(Args args);
 
 void print_usage();
