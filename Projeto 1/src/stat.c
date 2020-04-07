@@ -128,8 +128,9 @@ int callRightFunction(char * pathname, Args arg)
 
 int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
 {
+    int sum=0;
     if (max_depth == 0)
-        callRightFunction(pathname, arg);
+        return callRightFunction(pathname, arg);
     else
     {
         
@@ -208,13 +209,21 @@ int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
                     waitpid(-1, &status, WNOHANG); 
                     //termina aqui o processo pai
                     printf("Teste 5 \n");
-                    exit(0);
+
+                    if(!arg.sep_dirs){
+                        int s;
+                        read(fd[READ],&s,sizeof(int));
+                        sum+=s;
+                    }
+
+                    //exit(0);
 
                 }
                 else //processo filho
                 {
                     close(fd[READ]);
-
+                    int n;
+                    read(fd[READ], &n, sizeof(int));
                     //getDirectoryInfo(newPathname,max_depth-1);
                     // char **commands = get_cmd_args(arg);
                     // strcpy(commands[0], new_paths[i]);
@@ -224,21 +233,23 @@ int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
                     Args new_args = arg;
                     new_args.max_depth--;
                     strcpy(new_args.path, new_paths[i]);
-                    getDirectoryInfo(new_paths[i], max_depth-1,new_args);
-                
+                    int size =getDirectoryInfo(new_paths[i], max_depth-1,new_args);
+                    if(!arg.sep_dirs){
+                        
+                        write(fd[WRITE],&size,sizeof(size));
+                    }
                 }
             }
             else
             {
                 
                 printf("Teste 8\n");
-                callRightFunction(new_paths[i], arg);
+                sum+=callRightFunction(new_paths[i], arg);
             }
         }
     }
     
-    printf("Teste 9\n");
-    return 0;
+    return sum;
 
 }
 
