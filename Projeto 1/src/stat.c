@@ -20,24 +20,14 @@ int callRightFunction(char * pathname, Args arg)
 
     if (arg.dereference){
         struct stat info;
-        if(lstat(pathname, &info)<0)
+        if(stat(pathname, &info)<0)
         {
             printf("Error\n");
             exit(1);
         }
-        int size;
-        if(!S_ISLNK(info.st_mode)){
-            if(stat(pathname, &info)<0)
-            {
-                printf("Error\n");
-                exit(1);
-            }
-            size = info.st_size/block_size;
-            if (info.st_size%block_size != 0)
-                size++;
-        }
-        else
-            size = info.st_size/block_size;
+        int size = info.st_size/block_size;
+        if (info.st_size%block_size != 0)
+            size++;
         
         printResult(size,pathname);
         return size;
@@ -59,8 +49,7 @@ int callRightFunction(char * pathname, Args arg)
             if (info.st_size%block_size != 0)
                 size++;
         }
-        
-        
+
         printResult(size,pathname);
         return size;
     }
@@ -80,7 +69,7 @@ int max_depth, Args arg)
         return callRightFunction(pathname, arg);
     else
     {
-        sum=getInfo(pathname);
+        sum=callRightFunction(pathname,arg);
         pid_t pid;
         DIR * newDir = opendir(pathname); //apontador para os conteudos da pasta
         struct dirent *dp;
