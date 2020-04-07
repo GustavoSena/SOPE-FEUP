@@ -25,7 +25,12 @@ Args process_args(int argc, char *argv[]){
 			args.bytes= 1;
 			
 		}
-
+		else if (strcmp(argv[i], "-L") == 0||strcmp(argv[i], "--dereference") == 0) {
+			args.dereference=1;
+			
+			
+		}
+        
 		else if (strcmp(argv[i], "-l") == 0) { continue; }
 		
 		else if (strcmp(argv[i], "-B") == 0) {
@@ -33,13 +38,13 @@ Args process_args(int argc, char *argv[]){
 				i++;
 				int size=atoi(argv[i]);
 				if (size < 1) { 
-					printf("Invalid Block Size!");
+					perror("Invalid Block Size!");
 					print_usage();
 					exit(1);
 				} else args.block_size=size;
 			}
 			else{
-				printf("Invalid arguments!\n");
+				perror("Invalid arguments!\n");
 				print_usage();
 				exit(1);
 			}
@@ -54,11 +59,7 @@ Args process_args(int argc, char *argv[]){
 			
 		} 
 		
-		else if (strcmp(argv[i], "-L") == 0||strcmp(argv[i], "--dereference") == 0) {
-			args.dereference=1;
-			
-		}
-        
+	
 		else if (strcmp(argv[i], "-S") == 0||strcmp(argv[i], "--separate-dirs") == 0) {
 			args.sep_dirs=1;
 			
@@ -77,14 +78,14 @@ Args process_args(int argc, char *argv[]){
 			
 			struct stat info;
 			if(stat(argv[i], &info)<0){
-			printf("Invalid path!\n");
+			perror("Invalid path!\n");
 			exit(1);
 			}
 			else strcpy(args.path,argv[i]);
 				
 		} 
 		else{
-			printf("Invalid arguments!\n");
+			perror("Invalid arguments!\n");
 			print_usage();
 			exit(1);
 		}

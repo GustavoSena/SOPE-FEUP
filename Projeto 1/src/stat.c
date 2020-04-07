@@ -5,25 +5,19 @@ static int block_size;
 int getInfo(char * pathname) //Usar isto para symbolic links se -L for passada como argumento e para ficheiros
 {
     struct stat info;
-    if(stat(pathname, &info)<0)
+    if(lstat(pathname, &info)<0)
     {
         printf("Error\n");
         exit(1);
     }
-    int size;
-    if(block_size == 1024)//se quisermos apenas apresentar o nº real de bytes
-    {
-        size = info.st_size;
-        
-    }
-    else
-    {
-        int n_bytes = info.st_size;
-        size = n_bytes/block_size;
-        if (n_bytes%block_size != 0)
-            size++;
-    }
-    printResult(size, pathname);
+    
+    
+    int n_bytes = info.st_size;
+    int size = n_bytes/block_size;
+    if (n_bytes%block_size != 0)
+        size++;
+    
+    printResult(size,pathname);
     return size;
     
 }
@@ -34,7 +28,7 @@ bool isSymbolicLink(char * pathname)
     struct stat info;
     if(lstat(pathname, &info)<0)
     {
-        printf("Error\n");
+        perror("Error\n");
         exit(1);
     }
     return S_ISLNK(info.st_mode);
@@ -45,21 +39,14 @@ int getSymbolicLinkInfo(char * pathname)
     struct stat info;
     if(lstat(pathname, &info)<0)
     {
-        printf("Error\n");
-        exit(0);
+        perror("Error\n");
+        exit(1);
     }
-    int size;
-    if (block_size == 1024)
-    {
-        size = info.st_size;
-    }
-    else
-    {
-        int n_bytes = info.st_size;
-        size = n_bytes/block_size;
-        
-    }
-    //printResult(size, pathname);
+    
+    
+    int n_bytes = info.st_size;
+    int size = n_bytes/block_size;
+    printResult(size,pathname);
     return size;
     
 }
@@ -69,27 +56,20 @@ bool isDirectory(char * pathname)
     struct stat info;
     if(lstat(pathname, &info)<0)
     {
-        printf("Error\n");
-        exit(0);
+        perror("Error\n");
+        exit(1);
     }
     return S_ISDIR(info.st_mode);
 
+
 }
-
-
 bool isFile(char * pathname)
 {
     struct stat info;
     if(lstat(pathname, &info)<0)
     {
-        printf("Error\n");
-        exit(0);
-    }
-    if(S_ISREG(info.st_mode))
-        return true;
-    else
-    {
-        return false;
+        perror("Error\n");
+        exit(1);
     }
 
 }
@@ -97,33 +77,81 @@ bool isFile(char * pathname)
 
 int callRightFunction(char * pathname, Args arg)
 {
-    if(isFile(pathname))
+
+
+
+    /*if(isFile(pathname))
     {
         return getInfo(pathname);
     }
     else if(isSymbolicLink(pathname))
     {
-        if (arg.dereference == 1) //se o argumento tem -L
+        printf ("esta aqui\n");
+        if (arg.dereference) //se o argumento tem -L
             return getInfo(pathname);
         else
         {
             return getSymbolicLinkInfo(pathname);
+           
         }
         
+    }*/
+
+    if (arg.dereference){
+        struct stat info;
+        if(stat(pathname, &info)<0)
+        {
+            printf("Error\n");
+            exit(1);
+        }
+        int n_bytes;
+        int size;
+        if(S_ISLNK(info.st_mode)){
+            n_bytes = info.st_size;
+            size = n_bytes/block_size; 
+        }
+        else{
+            n_bytes = info.st_size;
+            size = n_bytes/block_size;
+            if (n_bytes%block_size != 0)
+                size++;
+        }
+        printResult(size,pathname);
+        return size;
     }
-    return 0;
+    else{
+        struct stat info;
+        if(lstat(pathname, &info)<0)
+        {
+            printf("Error\n");
+            exit(1);
+        }
+        
+        
+        int n_bytes = info.st_size;
+        int size = n_bytes/block_size;
+        
+        
+        printResult(size,pathname);
+        return size;
+    }
+    
 }
 
 
 
-int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
+
+
+int  getDirectoryInfo(char * pathname,
+int max_depth, Args arg)
 {
-    int sum=0;
+
+    int sum;
     if (max_depth == 0)
         return callRightFunction(pathname, arg);
     else
     {
-        
+        sum=getInfo(pathname);
         pid_t pid;
         DIR * newDir = opendir(pathname); //apontador para os conteudos da pasta
         struct dirent *dp;
@@ -154,9 +182,9 @@ int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
             new_paths[i] = malloc(200*sizeof(char));
         }
         
-        char *newPathname = malloc(sizeof(char*)*strlen(pathname));
+        char *newPathname;
         char barra[1] = {'/'};
-        strcpy(newPathname,pathname);
+        newPathname = pathname;
         strcat(newPathname,barra);
         char *tmp_path = (char*) malloc(200*sizeof(char));
         for (int i = 0; i < idx; i++)
@@ -164,6 +192,8 @@ int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
             strcpy(tmp_path, newPathname);
             strcat(tmp_path, new_files[i]);
             strcpy(new_paths[i], tmp_path);
+            //printf(new_paths[i]);
+            //printf("\n");
             //strcpy(tmp_path, newPathname);
         }
 
@@ -196,15 +226,20 @@ int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
                     printf("Teste 4 \n");
                     //pid_t wtp;
                     int status = 0;
-                    waitpid(-1, &status, WNOHANG); 
+                    waitpid(-1, &status, 0);
+                        
                     //termina aqui o processo pai
-                    //printf("Teste 5 \n");
+                   
                     int s;
-                    
+                    int temp=0;
                     if(!arg.sep_dirs){
                         read(fd[READ],&s,sizeof(int));
+                        
+                        temp+=s;
                         sum+=s;
                     }
+                    //printResult(temp,newPathname);
+                    
 
                     //exit(0);
 
@@ -226,9 +261,10 @@ int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
 
                     close(fd[READ]);
                     int size =getDirectoryInfo(new_paths[i], max_depth-1,arg);
-                    if(!arg.sep_dirs){
+                    
+                    if(!arg.sep_dirs)
                         write(fd[WRITE],&size,sizeof(size));
-                    }
+                    
                     
                 }
             }
