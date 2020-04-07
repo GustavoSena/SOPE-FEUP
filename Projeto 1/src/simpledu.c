@@ -74,7 +74,7 @@ int main(int argc, char *argv[], char *envp[])
         total =getDirectoryInfo(args.path, args.max_depth, args);
     else 
         total=callRightFunction(args.path, args);
-    //printResult(total,args.path);
+    printResult(total,args.path);
 
     return 0;
 

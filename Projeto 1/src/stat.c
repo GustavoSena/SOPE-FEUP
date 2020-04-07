@@ -5,7 +5,7 @@ static int block_size;
 int getInfo(char * pathname) //Usar isto para symbolic links se -L for passada como argumento e para ficheiros
 {
     struct stat info;
-    if(stat(pathname, &info)<0)
+    if(lstat(pathname, &info)<0)
     {
         printf("Error\n");
         exit(1);
@@ -78,7 +78,10 @@ bool isFile(char * pathname)
 
 int callRightFunction(char * pathname, Args arg)
 {
-    if(isFile(pathname))
+
+
+
+    /*if(isFile(pathname))
     {
         return getInfo(pathname);
     }
@@ -93,14 +96,55 @@ int callRightFunction(char * pathname, Args arg)
            
         }
         
+    }*/
+
+    if (arg.dereference){
+        struct stat info;
+        if(stat(pathname, &info)<0)
+        {
+            printf("Error\n");
+            exit(1);
+        }
+        int n_bytes;
+        int size;
+        if(S_ISLNK(info.st_mode)){
+            n_bytes = info.st_size;
+            size = n_bytes/block_size; 
+        }
+        else{
+            n_bytes = info.st_size;
+            size = n_bytes/block_size;
+            if (n_bytes%block_size != 0)
+                size++;
+        }
+        printResult(size,pathname);
+        return size;
+    }
+    else{
+        struct stat info;
+        if(lstat(pathname, &info)<0)
+        {
+            printf("Error\n");
+            exit(1);
+        }
+        
+        
+        int n_bytes = info.st_size;
+        int size = n_bytes/block_size;
+        
+        
+        printResult(size,pathname);
+        return size;
     }
     
-    return 0;
 }
 
 
 
-int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
+
+
+int  getDirectoryInfo(char * pathname,
+int max_depth, Args arg)
 {
 
     int sum;
@@ -186,11 +230,12 @@ int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
                     waitpid(-1, &status, 0);
                         
                     //termina aqui o processo pai
-                    // printf("Teste 5 \n");
+                   
                     int s;
                     int temp=0;
                     if(!arg.sep_dirs){
                         read(fd[READ],&s,sizeof(int));
+                        
                         temp+=s;
                         sum+=s;
                     }
@@ -217,6 +262,7 @@ int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
 
                     close(fd[READ]);
                     int size =getDirectoryInfo(new_paths[i], max_depth-1,arg);
+                    
                     if(!arg.sep_dirs)
                         write(fd[WRITE],&size,sizeof(size));
                     
