@@ -19,7 +19,7 @@ void createReg(Reg * reg,char *action){
     reg->time=((double)(clock()-beginTime))/(CLOCKS_PER_SEC/(double)1000.0);
     reg->pid=getpid();
     strcpy(reg->action, action);
-    reg->action=action;
+    //reg->action=action;
     strncpy(reg->info,"Command: ", sizeof("Command: "));
 }
 
@@ -64,7 +64,7 @@ void logSendSig(pid_t pid,int sig) {
 void logRecvPipe(char* info) {
     Reg reg; 
     createReg(&reg, "RECV_PIPE");
-    strcat(reg->info,info);
+    strcat(reg.info,info);
     writeReg(&reg);
     
 }
@@ -72,7 +72,7 @@ void logRecvPipe(char* info) {
 void logSendPipe(char* message) {
     Reg reg; 
     createReg(&reg, "SEND_PIPE");
-    strcat(reg->info,info);
+    strcat(reg.info,message);
     writeReg(&reg);
 }
 

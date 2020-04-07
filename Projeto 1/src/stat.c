@@ -203,7 +203,7 @@ int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
 
                     close(fd[WRITE]);
                     printf("Teste 4 \n");
-                    pid_t wtp;
+                    //pid_t wtp;
                     int status = 0;
                     waitpid(-1, &status, WNOHANG); 
                     //termina aqui o processo pai
