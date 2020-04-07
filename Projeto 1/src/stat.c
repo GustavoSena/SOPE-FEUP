@@ -93,10 +93,15 @@ bool isFile(char * pathname)
     if(lstat(pathname, &info)<0)
     {
         printf("Error\n");
-        exit(1);
+        exit(0);
     }
-    return S_ISREG(info.st_mode);
-     
+    if(S_ISREG(info.st_mode))
+        return true;
+    else
+    {
+        return false;
+    }
+
 }
 
 
@@ -132,7 +137,7 @@ int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
         pid_t pid;
         DIR * newDir = opendir(pathname); //apontador para os conteudos da pasta
         struct dirent *dp;
-        //printf("Teste 1\n");
+        printf("Teste 1\n");
        
         char **new_files = malloc(20*sizeof(char*));
         for (int i = 0; i < 20; i++)
@@ -151,7 +156,7 @@ int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
             }
         }
         closedir(newDir);
-        //printf("Teste 2\n");
+        printf("Teste 2\n");
 
         char **new_paths = malloc(idx*sizeof(char*));
         for (int i = 0; i < idx; i++)
@@ -172,11 +177,12 @@ int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
             strcpy(tmp_path, newPathname);
         }
 
-        //printf("Teste 3\n");
+        printf("Teste 3\n");
 
         for(int i = 0; i < idx; i++)
         {
-            
+
+
             if(isDirectory(new_paths[i]))
             {
                 
@@ -197,12 +203,12 @@ int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
                 {
 
                     close(fd[WRITE]);
-                   // printf("Teste 4 \n");
+                    printf("Teste 4 \n");
                     //pid_t wtp;
                     int status = 0;
                     waitpid(-1, &status, WNOHANG); 
                     //termina aqui o processo pai
-                    //printf("Teste 5 \n");
+                    printf("Teste 5 \n");
 
                     if(!arg.sep_dirs){
                         int s;
@@ -237,7 +243,7 @@ int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
             else
             {
                 
-                //printf("Teste 8\n");
+                printf("Teste 8\n");
                 sum+=callRightFunction(new_paths[i], arg);
             }
         }
