@@ -223,7 +223,6 @@ int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
                     int size =getDirectoryInfo(new_paths[i], max_depth-1,arg);
                     if(!arg.sep_dirs){
                         write(fd[WRITE],&size,sizeof(size));
-                        
                     }
                     
                 }
