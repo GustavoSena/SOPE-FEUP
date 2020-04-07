@@ -180,8 +180,7 @@ int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
 
         for(int i = 0; i < idx; i++)
         {
-
-
+            
             if(isDirectory(new_paths[i]))
             {
                 
@@ -236,10 +235,9 @@ int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
             }
         }
     }
-    
     printf("Teste 9\n");
     return 0;
-
+    
 }
 
 int setBlockSize(int size)
