@@ -105,100 +105,129 @@ bool isFile(char * pathname)
 }
 
 
+void callRightFunction(char * pathname, Args arg)
+{
+    if(isFile(pathname))
+    {
+        getInfo(pathname);
+    }
+    else if(isSymbolicLink(pathname))
+    {
+        if (arg.dereference == 1) //se o argumento tem -L
+            getInfo(pathname);
+        else
+        {
+            getSymbolicLinkInfo(pathname);
+        }
+        
+    }
+}
+
+
+
 int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
 {
     if (max_depth == 0)
-        getInfo(pathname);
+        callRightFunction(pathname, arg);
     else
     {
-        //int arr[50];
+        
         pid_t pid;
-        //int i = 0;
-        //int status;
         DIR * newDir = opendir(pathname); //apontador para os conteudos da pasta
-        if(readdir(newDir) ==  NULL)
-        {
-            printf("Error\n");
-            exit(1);
-        }
         struct dirent *dp;
-        char *filename;
         printf("Teste 1\n");
-        //Erro - só lê um nome, pode ter que ler vários, adicionar ao codigo de teste do diretorio um for loop antes com um array dos nomes dos ficheiros ou diretorios
-        while((dp = readdir(newDir) != NULL))
+       
+        char **new_files = malloc(20*sizeof(char*));
+        for (int i = 0; i < 20; i++)
+        {
+            new_files[i] = malloc(20*sizeof(char));
+        }
+        int idx = 0;
+        while((dp = readdir(newDir)) != NULL)
         {
             if ( !strcmp(dp->d_name, ".") || !strcmp(dp->d_name, "..") )
                 continue;
             else 
             {
-                strcpy(filename, dp->d_name);
-                //filename = dp->d_name;
+                strcpy(new_files[idx], dp->d_name);
+                idx++;
             }
         }
         closedir(newDir);
         printf("Teste 2\n");
-        char *newPathname = pathname;
-        char barra[1] = {'/'};
-        strcat(newPathname,barra);
-        strcat(newPathname, filename);
-        printf("Teste 3\n");
-        //usar o readdir //Ignorar o . e o .. dá o nome da pasta com d name da stat
-        /**
-         * d = opendir(".");
-        if (d == NULL) {
-            fprintf(stderr, "Couldn't open \".\"\n");
-            exit(1);
-            }
 
-        for (de = readdir(d); de != NULL; de = readdir(d)) {
-  
-        }
-        closedir(d);
-        */
-        if(isDirectory(newPathname))
+        char **new_paths = malloc(idx*sizeof(char*));
+        for (int i = 0; i < idx; i++)
         {
-            pid = fork();
-            //criar exec-instanciação do simpledu  com a nova pasta no processo filho e passar o novo path com todos os argumentos e subtrair o max_depth - 1
-            //cuidado para ir buscar o nome do path +/<nomedoficheiro>
-            if (pid < 0)
-            {
-                printf("Error\n");
-                exit(1);
-            }
-            else if (pid > 0) //processo pai
-            {
-                printf("Teste 4 \n");
-                //waitpid(-1, &status, WNOHANG); //tira também os processos zombie
-                pid_t wtp;
-                int status = 0;
-                while((wtp = wait(&status))); //espera por todos os processos filhos
-                //termina aqui o processo pai
-                printf("Teste 5 \n");
-                exit(0);
-
-            }
-            else //processo filho
-            {
-                //getDirectoryInfo(newPathname,max_depth-1);
-                char **commands = get_cmd_args(arg);
-                strcpy(commands[0], newPathname);
-                printf("Teste 5\n");
-                execvp("simpledu", commands);
-                printf("Teste 6\n");
-                
-            }
-        }
-        else
-        {
-            getInfo(newPathname); //falta testar se é link simbólico
-            printf("Teste 7\n");
+            new_paths[i] = malloc(25*sizeof(char));
         }
         
+        char *newPathname;
+        char barra[1] = {'/'};
+        newPathname = pathname;
+        strcat(newPathname,barra);
+        char *tmp_path = (char*) malloc(25*sizeof(char));
+        for (int i = 0; i < idx; i++)
+        {
+            strcpy(tmp_path, newPathname);
+            strcat(tmp_path, new_files[i]);
+            strcpy(new_paths[i], tmp_path);
+            strcpy(tmp_path, newPathname);
+        }
 
+        printf("Teste 3\n");
 
+        for(int i = 0; i < idx; i++)
+        {
+            if(isDirectory(new_paths[i]))
+            {
+            
+                pid = fork();
+                //criar exec-instanciação do simpledu  com a nova pasta no processo filho e passar o novo path com todos os argumentos e subtrair o max_depth - 1
+                //cuidado para ir buscar o nome do path +/<nomedoficheiro>
+                if (pid < 0)
+                {
+                    printf("Error\n");
+                    exit(1);
+                }
+                else if (pid > 0) //processo pai
+                {
+                    printf("Teste 4 \n");
+                    //waitpid(-1, &status, WNOHANG); //tira também os processos zombie
+                    pid_t wtp;
+                    int status = 0;
+                    //while((wtp = wait(&status))); //espera por todos os processos filhos
+                    waitpid(-1, &status, WNOHANG); 
+                    //termina aqui o processo pai
+                    printf("Teste 5 \n");
+                    exit(0);
+
+                }
+                else //processo filho
+                {
+                    //getDirectoryInfo(newPathname,max_depth-1);
+                    // char **commands = get_cmd_args(arg);
+                    // strcpy(commands[0], new_paths[i]);
+                    // printf("Teste 6\n");
+                    // execvp("simpledu", commands);
+                    // printf("Teste 7\n");
+                    Args new_args = arg;
+                    new_args.max_depth--;
+                    strcpy(new_args.path, new_paths[i]);
+                    getDirectoryInfo(new_paths[i], max_depth-1,new_args);
+                
+                }
+            }
+            else
+            {
+            
+                printf("Teste 8\n");
+                callRightFunction(new_paths[i], arg);
+            }
+        }
     }
     
-    printf("Teste 8\n");
+    printf("Teste 9\n");
     return 0;
 
 }
