@@ -174,7 +174,7 @@ int max_depth, Args arg)
             }
         }
         closedir(newDir);
-        printf("Teste 2\n");
+        
 
         char **new_paths = malloc(idx*sizeof(char*));
         for (int i = 0; i < idx; i++)
@@ -197,7 +197,7 @@ int max_depth, Args arg)
             //strcpy(tmp_path, newPathname);
         }
 
-        printf("Teste 3\n");
+        
 
         for(int i = 0; i < idx; i++)
         {
@@ -223,7 +223,7 @@ int max_depth, Args arg)
                 {
 
                     close(fd[WRITE]);
-                    printf("Teste 4 \n");
+                    
                     //pid_t wtp;
                     int status = 0;
                     waitpid(-1, &status, 0);
