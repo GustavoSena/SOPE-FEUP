@@ -157,6 +157,17 @@ int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
         */
         if(isDirectory(newPathname))
         {
+
+
+
+            int fd[2];
+
+            if (pipe(fd) < 0) {
+                perror("Pipe error!");
+                exit(1);
+            }
+
+
             pid = fork();
             //criar exec-instanciação do simpledu  com a nova pasta no processo filho e passar o novo path com todos os argumentos e subtrair o max_depth - 1
             //cuidado para ir buscar o nome do path +/<nomedoficheiro>
@@ -167,6 +178,10 @@ int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
             }
             else if (pid > 0) //processo pai
             {
+
+                close(fd[WRITE]);
+                
+
                 printf("Teste 4 \n");
                 //waitpid(-1, &status, WNOHANG); //tira também os processos zombie
                 pid_t wtp;
@@ -179,6 +194,8 @@ int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
             }
             else //processo filho
             {
+                close(fd[READ]);
+
                 //getDirectoryInfo(newPathname,max_depth-1);
                 char **commands = get_cmd_args(arg);
                 strcpy(commands[0], newPathname);

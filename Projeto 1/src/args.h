@@ -20,6 +20,8 @@ typedef struct{
 
 Args process_args(int argc, char *argv[]);
 
+char * argline(Args args);
+
 char** get_cmd_args(Args args);
 
 void print_usage();
