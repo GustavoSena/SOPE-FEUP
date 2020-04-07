@@ -73,7 +73,7 @@ int main(int argc, char *argv[], char *envp[])
     if(isDirectory(args.path))
     {
         printf("Entrou no diretório\n");
-        getDirectoryInfo(args.path, args.max_depth, args);
+
     }
 
     return 0;
