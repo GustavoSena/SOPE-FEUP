@@ -69,28 +69,12 @@ int main(int argc, char *argv[], char *envp[])
     
     Args args = process_args(argc,argv);
     setBlockSize(args.block_size);
-    callRightFunction(args.path, args);
+    int total; 
     if(isDirectory(args.path))
-    {
-        printf("Entrou no diretório\n");
-        getDirectoryInfo(args.path, args.max_depth, args);
-        //printResult(total,args.path);
-    }
-    // if(isFile(args.path))
-    // {
-    //     return getInfo(args.path);
-    // }
-    // else if(isSymbolicLink(args.path))
-    // {
-    //     printf("Entrou no symbolic link\n");
-    //     if (args.dereference == 1) //se o argumento tem -L
-    //         return getInfo(args.path);
-    //     else
-    //     {
-    //         return getSymbolicLinkInfo(args.path);
-    //     }
-        
-    // }
+        total =getDirectoryInfo(args.path, args.max_depth, args);
+    else 
+        total=callRightFunction(args.path, args);
+    printResult(total,args.path);
 
     return 0;
 

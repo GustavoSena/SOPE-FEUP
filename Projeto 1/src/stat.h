@@ -13,7 +13,7 @@
 #include "args.h"
 #include "result.h"
 
-int block_size; 
+
 
 #define READ  0
 #define WRITE  1 
@@ -29,6 +29,8 @@ int getSymbolicLinkInfo(char * pathname);
 bool isDirectory(char * pathname);
 
 bool isFile(char * pathname);
+
+
 
 int callRightFunction(char * pathname, Args arg);
 
