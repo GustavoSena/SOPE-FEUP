@@ -65,7 +65,7 @@ int getSymbolicLinkInfo(char * pathname)
         
     }
     printResult(size, pathname);
-    return 0;
+    return size;
     
 }
 
@@ -105,22 +105,23 @@ bool isFile(char * pathname)
 }
 
 
-void callRightFunction(char * pathname, Args arg)
+int callRightFunction(char * pathname, Args arg)
 {
     if(isFile(pathname))
     {
-        getInfo(pathname);
+        return getInfo(pathname);
     }
     else if(isSymbolicLink(pathname))
     {
         if (arg.dereference == 1) //se o argumento tem -L
-            getInfo(pathname);
+            return getInfo(pathname);
         else
         {
-            getSymbolicLinkInfo(pathname);
+            return getSymbolicLinkInfo(pathname);
         }
         
     }
+    return 0;
 }
 
 
@@ -183,8 +184,6 @@ int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
             {
             
                 pid = fork();
-                //criar exec-instanciação do simpledu  com a nova pasta no processo filho e passar o novo path com todos os argumentos e subtrair o max_depth - 1
-                //cuidado para ir buscar o nome do path +/<nomedoficheiro>
                 if (pid < 0)
                 {
                     printf("Error\n");
@@ -193,10 +192,8 @@ int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
                 else if (pid > 0) //processo pai
                 {
                     printf("Teste 4 \n");
-                    //waitpid(-1, &status, WNOHANG); //tira também os processos zombie
                     pid_t wtp;
                     int status = 0;
-                    //while((wtp = wait(&status))); //espera por todos os processos filhos
                     waitpid(-1, &status, WNOHANG); 
                     //termina aqui o processo pai
                     printf("Teste 5 \n");
