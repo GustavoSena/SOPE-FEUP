@@ -26,4 +26,6 @@ void writeReg(Reg * reg);
 void logCreate(int argc, char *argv[]);
 void logExit(int status);
 void logRecvSig(int sig);
-void logSendSig(pid_t pid, int sig);
+void logSendSig(pid_t pid,int sig);
+void logRecvPipe(char* info);
+void logSendPipe(char* message);
