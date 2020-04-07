@@ -108,6 +108,7 @@ int callRightFunction(char * pathname, Args arg)
         int n_bytes;
         int size;
         if(S_ISLNK(info.st_mode)){
+            printf("Entrou\n");
             n_bytes = info.st_size;
             size = n_bytes/block_size; 
         }
