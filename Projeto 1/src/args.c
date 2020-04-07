@@ -1,7 +1,7 @@
 #include "args.h"
 
 void print_usage(){
-	printf("Usage: simpledu [-l] [path] [-a] [-b] [-B size] [-L] [-S] [--max-depth=N]\n");
+	printf("Usage: simpledu -l [path] [-a] [-b] [-B size] [-L] [-S] [--max-depth=N]\n");
 }
 Args process_args(int argc, char *argv[]){
     Args args;
@@ -92,4 +92,40 @@ Args process_args(int argc, char *argv[]){
 		
     }
 	return args; 
+
+}
+
+
+char** get_cmd_args(Args args){
+	
+    char ** cmd_args = malloc(7 * sizeof(char*));
+    for (int i =0 ; i < 7; ++i)
+        cmd_args[i] = malloc(30* sizeof(char));
+    
+    int i=1;
+	if(args.all==1){
+		strcpy(cmd_args[i],"-a");
+		i++;
+	}
+	if(args.bytes==1){
+		strcpy(cmd_args[i],"-b");
+		i++;
+	}
+	if(args.block_size!=1024){
+		sprintf(cmd_args[i],"--block-size=%d",args.block_size);
+		i++;
+	}
+	if(args.dereference==1){
+		strcpy(cmd_args[i],"-L");
+		i++;
+	}
+	if(args.sep_dirs==1){
+		strcpy(cmd_args[i],"-S");
+		i++;
+	}
+	if(args.max_depth!=__INT_MAX__){
+		sprintf(cmd_args[i],"--max_depth=%d",args.max_depth - 1);
+		i++;
+	}
+	return cmd_args;
 }

@@ -1,3 +1,6 @@
+#pragma once
+
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -17,6 +20,6 @@ typedef struct{
 
 Args process_args(int argc, char *argv[]);
 
-
+char** get_cmd_args(Args args);
 
 void print_usage();

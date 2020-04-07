@@ -18,12 +18,13 @@ void createReg(Reg * reg,char *action){
     
     reg->time=((double)(clock()-beginTime))/(CLOCKS_PER_SEC/(double)1000.0);
     reg->pid=getpid();
-    reg->action=action;
+    strcpy(reg->action, action);
+    //reg->action=action;
     strncpy(reg->info,"Command: ", sizeof("Command: "));
 }
 
 void writeReg(Reg * reg){
-    fprintf(logs,"%.2f - %.8d - %s - %s\n", reg->instant, reg->pid, reg->action, reg->info)
+    fprintf(logs,"%.2f - %.8d - %s - %s\n", reg->time, reg->pid, reg->action, reg->info);
 }
 
 void logCreate(int argc, char *args[]) {
