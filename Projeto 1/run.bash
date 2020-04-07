@@ -6,7 +6,7 @@ echo "----------------------------"
 # $? = 2 otherwise
 make 
 if [ $? -eq 0 ] ; then
-  ./simpledu -l ../TestDir -a --block-size=4096 --max-depth=4 -S -L $@
+  ./simpledu -l ../TestDir -a --block-size=1024 --max-depth=4 -S -L $@
   make clean
 else
   echo "COMPILATION ERROR";
