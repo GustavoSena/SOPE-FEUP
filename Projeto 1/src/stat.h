@@ -15,7 +15,8 @@
 
 int block_size; 
 
-
+#define READ        0
+#define WRITE       1
 
 //Decidir como fazer para apresentar a informação
 

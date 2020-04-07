@@ -129,3 +129,37 @@ char** get_cmd_args(Args args){
 	}
 	return cmd_args;
 }
+
+
+char * argline(Args args){
+	char * line = malloc(1024* sizeof(char));
+	strcpy(line,"");
+	if(args.all==1){
+		strcat(line," -a");
+		
+	}
+	if(args.bytes==1){
+		strcat(line," -b");
+		
+	}
+	if(args.block_size!=1024){
+		char s[40];
+		sprintf(s," --block-size=%d",args.block_size);
+		strcat(line,s);
+		
+	}
+	if(args.dereference==1){
+		strcat(line," -L");
+		
+	}
+	if(args.sep_dirs==1){
+		strcat(line," -S");
+		
+	}
+	if(args.max_depth!=__INT_MAX__){
+		char s[40];
+		sprintf(s," --max_depth=%d",args.max_depth - 1);
+		strcat(line,s);
+	}
+	return line;
+}

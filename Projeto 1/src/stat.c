@@ -180,9 +180,18 @@ int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
 
         for(int i = 0; i < idx; i++)
         {
+
+
             if(isDirectory(new_paths[i]))
             {
-            
+                
+
+                int fd[2];
+
+                if (pipe(fd) < 0) {
+                    perror("Pipe error!");
+                    exit(1);
+                }
                 pid = fork();
                 if (pid < 0)
                 {
@@ -191,6 +200,8 @@ int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
                 }
                 else if (pid > 0) //processo pai
                 {
+
+                    close(fd[WRITE]);
                     printf("Teste 4 \n");
                     pid_t wtp;
                     int status = 0;
@@ -202,6 +213,8 @@ int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
                 }
                 else //processo filho
                 {
+                    close(fd[READ]);
+
                     //getDirectoryInfo(newPathname,max_depth-1);
                     // char **commands = get_cmd_args(arg);
                     // strcpy(commands[0], new_paths[i]);
@@ -217,7 +230,7 @@ int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
             }
             else
             {
-            
+                
                 printf("Teste 8\n");
                 callRightFunction(new_paths[i], arg);
             }
