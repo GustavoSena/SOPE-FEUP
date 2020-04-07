@@ -93,15 +93,10 @@ bool isFile(char * pathname)
     if(lstat(pathname, &info)<0)
     {
         printf("Error\n");
-        exit(0);
+        exit(1);
     }
-    if(S_ISREG(info.st_mode))
-        return true;
-    else
-    {
-        return false;
-    }
-
+    return S_ISREG(info.st_mode);
+     
 }
 
 
@@ -128,15 +123,16 @@ int callRightFunction(char * pathname, Args arg)
 
 int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
 {
+    int sum=0;
     if (max_depth == 0)
-        callRightFunction(pathname, arg);
+        return callRightFunction(pathname, arg);
     else
     {
         
         pid_t pid;
         DIR * newDir = opendir(pathname); //apontador para os conteudos da pasta
         struct dirent *dp;
-        printf("Teste 1\n");
+        //printf("Teste 1\n");
        
         char **new_files = malloc(20*sizeof(char*));
         for (int i = 0; i < 20; i++)
@@ -155,7 +151,7 @@ int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
             }
         }
         closedir(newDir);
-        printf("Teste 2\n");
+        //printf("Teste 2\n");
 
         char **new_paths = malloc(idx*sizeof(char*));
         for (int i = 0; i < idx; i++)
@@ -176,7 +172,7 @@ int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
             strcpy(tmp_path, newPathname);
         }
 
-        printf("Teste 3\n");
+        //printf("Teste 3\n");
 
         for(int i = 0; i < idx; i++)
         {
@@ -201,19 +197,27 @@ int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
                 {
 
                     close(fd[WRITE]);
-                    printf("Teste 4 \n");
+                   // printf("Teste 4 \n");
                     //pid_t wtp;
                     int status = 0;
                     waitpid(-1, &status, WNOHANG); 
                     //termina aqui o processo pai
-                    printf("Teste 5 \n");
-                    exit(0);
+                    //printf("Teste 5 \n");
+
+                    if(!arg.sep_dirs){
+                        int s;
+                        read(fd[READ],&s,sizeof(int));
+                        sum+=s;
+                    }
+
+                    //exit(0);
 
                 }
                 else //processo filho
                 {
                     close(fd[READ]);
-
+                    int n;
+                    read(fd[READ], &n, sizeof(int));
                     //getDirectoryInfo(newPathname,max_depth-1);
                     // char **commands = get_cmd_args(arg);
                     // strcpy(commands[0], new_paths[i]);
@@ -223,21 +227,24 @@ int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
                     Args new_args = arg;
                     new_args.max_depth--;
                     strcpy(new_args.path, new_paths[i]);
-                    getDirectoryInfo(new_paths[i], max_depth-1,new_args);
-                
+                    int size =getDirectoryInfo(new_paths[i], max_depth-1,new_args);
+                    if(!arg.sep_dirs){
+                        
+                        write(fd[WRITE],&size,sizeof(size));
+                    }
                 }
             }
             else
             {
                 
-                printf("Teste 8\n");
-                callRightFunction(new_paths[i], arg);
+                //printf("Teste 8\n");
+                sum+=callRightFunction(new_paths[i], arg);
             }
         }
     }
-    printf("Teste 9\n");
-    return 0;
     
+    return sum;
+
 }
 
 int setBlockSize(int size)
