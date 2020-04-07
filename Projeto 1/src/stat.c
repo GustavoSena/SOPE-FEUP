@@ -1,5 +1,7 @@
 #include "stat.h"
 
+
+static int block_size; 
 int getInfo(char * pathname) //Usar isto para symbolic links se -L for passada como argumento e para ficheiros
 {
     struct stat info;
@@ -35,14 +37,7 @@ bool isSymbolicLink(char * pathname)
         printf("Error\n");
         exit(1);
     }
-    if(S_ISLNK(info.st_mode))
-        return true;
-    else
-    {
-        return false;
-    }
-    
-
+    return S_ISLNK(info.st_mode);
 }
 
 int getSymbolicLinkInfo(char * pathname) 
@@ -64,7 +59,7 @@ int getSymbolicLinkInfo(char * pathname)
         size = n_bytes/block_size;
         
     }
-    printResult(size, pathname);
+    //printResult(size, pathname);
     return size;
     
 }
@@ -77,12 +72,7 @@ bool isDirectory(char * pathname)
         printf("Error\n");
         exit(0);
     }
-    if(S_ISDIR(info.st_mode))
-        return true;
-    else
-    {
-        return false;
-    }
+    return S_ISDIR(info.st_mode);
 
 }
 
@@ -139,11 +129,9 @@ int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
         struct dirent *dp;
         printf("Teste 1\n");
        
-        char **new_files = malloc(20*sizeof(char*));
-        for (int i = 0; i < 20; i++)
-        {
-            new_files[i] = malloc(20*sizeof(char));
-        }
+        char **new_files = malloc(200*sizeof(char*));
+        
+            
         int idx = 0;
         while((dp = readdir(newDir)) != NULL)
         {
@@ -151,6 +139,8 @@ int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
                 continue;
             else 
             {
+                new_files[idx] = malloc(200*sizeof(char));
+        
                 strcpy(new_files[idx], dp->d_name);
                 idx++;
             }
@@ -161,20 +151,20 @@ int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
         char **new_paths = malloc(idx*sizeof(char*));
         for (int i = 0; i < idx; i++)
         {
-            new_paths[i] = malloc(25*sizeof(char));
+            new_paths[i] = malloc(200*sizeof(char));
         }
         
-        char *newPathname;
+        char *newPathname = malloc(sizeof(char*)*strlen(pathname));
         char barra[1] = {'/'};
-        newPathname = pathname;
+        strcpy(newPathname,pathname);
         strcat(newPathname,barra);
-        char *tmp_path = (char*) malloc(25*sizeof(char));
+        char *tmp_path = (char*) malloc(200*sizeof(char));
         for (int i = 0; i < idx; i++)
         {
             strcpy(tmp_path, newPathname);
             strcat(tmp_path, new_files[i]);
             strcpy(new_paths[i], tmp_path);
-            strcpy(tmp_path, newPathname);
+            //strcpy(tmp_path, newPathname);
         }
 
         printf("Teste 3\n");
@@ -196,7 +186,7 @@ int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
                 pid = fork();
                 if (pid < 0)
                 {
-                    printf("Error\n");
+                    perror("Error\n");
                     exit(1);
                 }
                 else if (pid > 0) //processo pai
@@ -208,10 +198,10 @@ int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
                     int status = 0;
                     waitpid(-1, &status, WNOHANG); 
                     //termina aqui o processo pai
-                    printf("Teste 5 \n");
-
+                    //printf("Teste 5 \n");
+                    int s;
+                    
                     if(!arg.sep_dirs){
-                        int s;
                         read(fd[READ],&s,sizeof(int));
                         sum+=s;
                     }
@@ -221,32 +211,45 @@ int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
                 }
                 else //processo filho
                 {
-                    close(fd[READ]);
-                    int n;
-                    read(fd[READ], &n, sizeof(int));
+                    
+                    //int n;
+                    //read(fd[READ], &n, sizeof(int));
                     //getDirectoryInfo(newPathname,max_depth-1);
                     // char **commands = get_cmd_args(arg);
                     // strcpy(commands[0], new_paths[i]);
                     // printf("Teste 6\n");
                     // execvp("simpledu", commands);
                     // printf("Teste 7\n");
-                    Args new_args = arg;
-                    new_args.max_depth--;
-                    strcpy(new_args.path, new_paths[i]);
-                    int size =getDirectoryInfo(new_paths[i], max_depth-1,new_args);
+                    /*Args new_args = arg;
+                    new_args.max_depth--;*/
+                    //strcpy(new_args.path, new_paths[i]);
+
+                    close(fd[READ]);
+                    int size =getDirectoryInfo(new_paths[i], max_depth-1,arg);
                     if(!arg.sep_dirs){
-                        
                         write(fd[WRITE],&size,sizeof(size));
                     }
+                    
                 }
             }
             else
             {
+                int s=callRightFunction(new_paths[i], arg);
+                //if(!arg.sep_dirs)
+                    sum+=s;
                 
-                printf("Teste 8\n");
-                sum+=callRightFunction(new_paths[i], arg);
+                
             }
         }
+
+        for (int i=0; i<idx;i++){
+            free(new_files[i]);
+            free(new_paths[i]);
+        }
+        free(new_files);
+        free(new_paths);
+
+
     }
     
     return sum;
