@@ -73,9 +73,24 @@ int main(int argc, char *argv[], char *envp[])
     if(isDirectory(args.path))
     {
         printf("Entrou no diretório\n");
-        int total =getDirectoryInfo(args.path, args.max_depth, args);
-        printResult(total,args.path);
+        getDirectoryInfo(args.path, args.max_depth, args);
+        //printResult(total,args.path);
     }
+    // if(isFile(args.path))
+    // {
+    //     return getInfo(args.path);
+    // }
+    // else if(isSymbolicLink(args.path))
+    // {
+    //     printf("Entrou no symbolic link\n");
+    //     if (args.dereference == 1) //se o argumento tem -L
+    //         return getInfo(args.path);
+    //     else
+    //     {
+    //         return getSymbolicLinkInfo(args.path);
+    //     }
+        
+    // }
 
     return 0;
 

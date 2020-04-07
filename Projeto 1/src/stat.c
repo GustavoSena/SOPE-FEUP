@@ -130,6 +130,7 @@ int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
     {
         
         pid_t pid;
+        getInfo(pathname);
         DIR * newDir = opendir(pathname); //apontador para os conteudos da pasta
         struct dirent *dp;
         //printf("Teste 1\n");
@@ -147,6 +148,7 @@ int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
             else 
             {
                 strcpy(new_files[idx], dp->d_name);
+                printf("%s\n", new_files[idx]);
                 idx++;
             }
         }
@@ -169,6 +171,7 @@ int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
             strcpy(tmp_path, newPathname);
             strcat(tmp_path, new_files[i]);
             strcpy(new_paths[i], tmp_path);
+            printf("%s\n", new_paths[i]);
             strcpy(tmp_path, newPathname);
         }
 
@@ -179,8 +182,6 @@ int  getDirectoryInfo(char * pathname,int max_depth, Args arg)
             
             if(isDirectory(new_paths[i]))
             {
-                
-
                 int fd[2];
 
                 if (pipe(fd) < 0) {
