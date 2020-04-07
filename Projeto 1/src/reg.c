@@ -53,10 +53,10 @@ void logRecvSig(int sig) {
     writeReg(&reg);
 }
 
-void logSendSig(int sig) {
+void logSendSig(pid_t pid,int sig) {
     Reg reg; 
     createReg(&reg, "SEND_SIGNAL");
-    sprintf(reg.info, "Sent %d to process %d", sig, reg.pid);
+    sprintf(reg.info, "Sent %d to process %d", sig, pid);
     writeReg(&reg);
 }
 
