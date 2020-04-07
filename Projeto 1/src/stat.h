@@ -13,7 +13,7 @@
 #include "args.h"
 #include "result.h"
 
-int block_size; 
+
 
 #define READ  0
 #define WRITE  1 

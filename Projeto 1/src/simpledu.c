@@ -69,7 +69,7 @@ int main(int argc, char *argv[], char *envp[])
     
     Args args = process_args(argc,argv);
     setBlockSize(args.block_size);
-    callRightFunction(args.path, args);
+    //callRightFunction(args.path, args);
     if(isDirectory(args.path))
     {
         printf("Entrou no diretório\n");
