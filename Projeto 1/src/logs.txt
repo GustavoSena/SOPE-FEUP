@@ -1,2 +1,16 @@
-0.00 - 00000091 - CREATE - Command: ./simpledu -l ../TestDir -a -b --max-depth=4 -S -L
-0.00 - 00000091 - EXIT - 1
+0.12 - 00020671 - CREATE - Command: ./simpledu -l ../TestDir -a --block-size=1024 --max-depth=4 -L
+-0.52 - 00020672 - SEND_PIPE - Command: 16
+-0.54 - 00020673 - SEND_PIPE - Command: 12
+-0.48 - 00020673 - EXIT - 0
+0.12 - 00020671 - CREATE - Command: ./simpledu -l ../TestDir -a --block-size=1024 --max-depth=4 -L
+-0.52 - 00020672 - SEND_PIPE - Command: 16
+-0.40 - 00020672 - RECV_PIPE - Command: 12
+-0.32 - 00020672 - EXIT - 0
+0.12 - 00020671 - CREATE - Command: ./simpledu -l ../TestDir -a --block-size=1024 --max-depth=4 -L
+0.35 - 00020671 - RECV_PIPE - Command: 16
+-0.54 - 00020674 - SEND_PIPE - Command: 12
+-0.48 - 00020674 - EXIT - 0
+0.12 - 00020671 - CREATE - Command: ./simpledu -l ../TestDir -a --block-size=1024 --max-depth=4 -L
+0.35 - 00020671 - RECV_PIPE - Command: 16
+0.45 - 00020671 - RECV_PIPE - Command: 12
+0.52 - 00020671 - EXIT - 0

@@ -66,11 +66,12 @@ int main(int argc, char *argv[], char *envp[])
     logCreate(argc,argv);
     if(isDirectory(args.path))
         total =getDirectoryInfo(args.path, args.max_depth, args);
-    else 
+    else {
         total=callRightFunction(args.path, args);
-    printResult(total,args.path);
-
-    return 0;
+        printResult(total,args.path);
+    }
+    logExit(0);
+    //return 0;
 
 
 }
