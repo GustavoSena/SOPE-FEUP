@@ -60,8 +60,7 @@ int callRightFunction(char * pathname, Args arg)
 
 
 
-int  getDirectoryInfo(char * pathname,
-int max_depth, Args arg)
+int  getDirectoryInfo(char * pathname, int max_depth, Args arg)
 {
 
     int sum;
