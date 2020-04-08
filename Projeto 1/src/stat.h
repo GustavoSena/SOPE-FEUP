@@ -12,6 +12,7 @@
 #include <dirent.h>
 #include "args.h"
 #include "result.h"
+#include "reg.h"
 
 
 

@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <dirent.h>
+#include "reg.h"
 #include <sys/stat.h>
 
 typedef struct{

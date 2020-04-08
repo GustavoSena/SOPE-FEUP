@@ -1,0 +1,2 @@
+0.00 - 00000091 - CREATE - Command: ./simpledu -l ../TestDir -a -b --max-depth=4 -S -L
+0.00 - 00000091 - EXIT - 1
