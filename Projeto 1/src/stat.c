@@ -96,13 +96,12 @@ int  getDirectoryInfo(char * pathname, int max_depth, Args arg)
                 new_files[idx] = malloc(200*sizeof(char));
         
                 strcpy(new_files[idx], dp->d_name);
-                printf("%s\n", new_files[idx]);
                 idx++;
+                
             }
         }
         closedir(newDir);
     
-
         char **new_paths = malloc(idx*sizeof(char*));
         for (int i = 0; i < idx; i++)
         {
@@ -110,18 +109,18 @@ int  getDirectoryInfo(char * pathname, int max_depth, Args arg)
         }
         
         char *newPathname;
-        char barra[1] = {'/'};
         newPathname = pathname;
-        strcat(newPathname,barra);
+        strcat(newPathname,"/");
+        printf("%s\n", newPathname);
         char *tmp_path = (char*) malloc(200*sizeof(char));
         for (int i = 0; i < idx; i++)
         {
+
             strcpy(tmp_path, newPathname);
             strcat(tmp_path, new_files[i]);
             strcpy(new_paths[i], tmp_path);
-        }
-
     
+        }
 
         for(int i = 0; i < idx; i++)
         {
@@ -162,7 +161,7 @@ int  getDirectoryInfo(char * pathname, int max_depth, Args arg)
                 {
                     
                     close(fd[READ]);
-                    int size =getDirectoryInfo(new_paths[i], max_depth-1,arg);
+                    int size = getDirectoryInfo(new_paths[i], max_depth-1,arg);
                     
                     if(!arg.sep_dirs) {
                         write(fd[WRITE],&size,sizeof(size));
