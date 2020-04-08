@@ -171,10 +171,11 @@ int  getDirectoryInfo(char * pathname, int max_depth, Args arg)
                     
                     if(!arg.sep_dirs) {
                         write(fd[WRITE],&size,sizeof(size));
-                         char temp[30];
+                        char temp[30];
                         sprintf(temp, "%d", size);
                         logSendPipe(temp);
                     }
+                    exit(0);
                     
                 }
             }
