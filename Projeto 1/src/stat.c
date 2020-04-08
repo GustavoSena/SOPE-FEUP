@@ -9,7 +9,7 @@ bool isDirectory(char * pathname)
     if(lstat(pathname, &info)<0)
     {
         perror("Error\n");
-        exit(1);
+        logExit(1);
     }
     return S_ISDIR(info.st_mode);
 }
@@ -20,24 +20,14 @@ int callRightFunction(char * pathname, Args arg)
 
     if (arg.dereference){
         struct stat info;
-        if(lstat(pathname, &info)<0)
+        if(stat(pathname, &info)<0)
         {
             printf("Error\n");
-            exit(1);
+            logExit(1);
         }
-        int size;
-        if(!S_ISLNK(info.st_mode)){
-            if(stat(pathname, &info)<0)
-            {
-                printf("Error\n");
-                exit(1);
-            }
-            size = info.st_size/block_size;
-            if (info.st_size%block_size != 0)
-                size++;
-        }
-        else
-            size = info.st_size/block_size;
+        int size = info.st_size/block_size;
+        if (info.st_size%block_size != 0)
+            size++;
         
         printResult(size,pathname);
         return size;
@@ -47,20 +37,28 @@ int callRightFunction(char * pathname, Args arg)
         if(lstat(pathname, &info)<0)
         {
             printf("Error\n");
-            exit(1);
+            logExit(1);
         }
         
         int size;
         if(S_ISLNK(info.st_mode))
-            size = info.st_size/block_size; 
+            if(!arg.bytes)
+                size = info.st_size/block_size; 
+            else
+                size=info.st_size;
+                
         
         else{
-            size = info.st_size/block_size;
-            if (info.st_size%block_size != 0)
-                size++;
+            if(!arg.bytes){
+                size = info.st_size/block_size;
+                if (info.st_size%block_size != 0)
+                    size++;
+            }
+            else
+                size=info.st_size;
+
         }
-        
-        
+
         printResult(size,pathname);
         return size;
     }
@@ -80,7 +78,7 @@ int max_depth, Args arg)
         return callRightFunction(pathname, arg);
     else
     {
-        sum=getInfo(pathname);
+        sum=callRightFunction(pathname,arg);
         pid_t pid;
         DIR * newDir = opendir(pathname); //apontador para os conteudos da pasta
         struct dirent *dp;
@@ -136,13 +134,13 @@ int max_depth, Args arg)
 
                 if (pipe(fd) < 0) {
                     perror("Pipe error!");
-                    exit(1);
+                    logExit(1);
                 }
                 pid = fork();
                 if (pid < 0)
                 {
                     perror("Error\n");
-                    exit(1);
+                    logExit(1);
                 }
                 else if (pid > 0) //processo pai
                 {
@@ -155,6 +153,9 @@ int max_depth, Args arg)
                     if(!arg.sep_dirs){
                         read(fd[READ],&s,sizeof(int));
                         sum+=s;
+                        char temp[30];
+                        sprintf(temp, "%d", s);
+                        logRecvPipe(temp);
                     }
 
                 }
@@ -164,9 +165,12 @@ int max_depth, Args arg)
                     close(fd[READ]);
                     int size =getDirectoryInfo(new_paths[i], max_depth-1,arg);
                     
-                    if(!arg.sep_dirs)
+                    if(!arg.sep_dirs) {
                         write(fd[WRITE],&size,sizeof(size));
-                    
+                         char temp[30];
+                        sprintf(temp, "%d", size);
+                        logSendPipe(temp);
+                    }
                     
                 }
             }
