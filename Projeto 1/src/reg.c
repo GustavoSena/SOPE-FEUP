@@ -25,6 +25,7 @@ void createReg(Reg * reg,char *action){
 
 void writeReg(Reg * reg){
     fprintf(logs,"%.2f - %.8d - %s - %s\n", reg->time, reg->pid, reg->action, reg->info);
+    setbuf(logs, NULL); //limpar o buffer
 }
 
 void logCreate(int argc, char *args[]) {

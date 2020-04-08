@@ -69,8 +69,7 @@ int callRightFunction(char * pathname, Args arg)
 
 
 
-int  getDirectoryInfo(char * pathname,
-int max_depth, Args arg)
+int  getDirectoryInfo(char * pathname, int max_depth, Args arg)
 {
 
     int sum=0;
@@ -85,6 +84,7 @@ int max_depth, Args arg)
     {
         sum=0;
         pid_t pid;
+        callRightFunction(pathname, arg);
         DIR * newDir = opendir(pathname); //apontador para os conteudos da pasta
         struct dirent *dp;
        
@@ -102,11 +102,11 @@ int max_depth, Args arg)
         
                 strcpy(new_files[idx], dp->d_name);
                 idx++;
+                
             }
         }
         closedir(newDir);
     
-
         char **new_paths = malloc(idx*sizeof(char*));
         for (int i = 0; i < idx; i++)
         {
@@ -121,12 +121,12 @@ int max_depth, Args arg)
         char *tmp_path = (char*) malloc(200*sizeof(char));
         for (int i = 0; i < idx; i++)
         {
+
             strcpy(tmp_path, newPathname);
             strcat(tmp_path, new_files[i]);
             strcpy(new_paths[i], tmp_path);
-        }
-
     
+        }
 
         for(int i = 0; i < idx; i++)
         {
@@ -134,8 +134,6 @@ int max_depth, Args arg)
 
             if(isDirectory(new_paths[i]))
             {
-                
-
                 int fd[2];
 
                 if (pipe(fd) < 0) {
@@ -169,14 +167,15 @@ int max_depth, Args arg)
                 {
                     
                     close(fd[READ]);
-                    int size =getDirectoryInfo(new_paths[i], max_depth-1,arg);
+                    int size = getDirectoryInfo(new_paths[i], max_depth-1,arg);
                     
                     if(!arg.sep_dirs) {
                         write(fd[WRITE],&size,sizeof(size));
-                         char temp[30];
+                        char temp[30];
                         sprintf(temp, "%d", size);
                         logSendPipe(temp);
                     }
+                    exit(0);
                     
                 }
             }
