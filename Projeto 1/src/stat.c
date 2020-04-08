@@ -29,7 +29,7 @@ int callRightFunction(char * pathname, Args arg)
         if (info.st_size%block_size != 0)
             size++;
         
-        printResult(size,pathname);
+        
         return size;
     }
     else{
@@ -59,7 +59,7 @@ int callRightFunction(char * pathname, Args arg)
 
         }
 
-        printResult(size,pathname);
+        
         return size;
     }
     
@@ -73,12 +73,15 @@ int  getDirectoryInfo(char * pathname,
 int max_depth, Args arg)
 {
 
-    int sum;
-    if (max_depth == 0)
-        return callRightFunction(pathname, arg);
+    int sum=0;
+    if (max_depth == 0){ 
+        sum =callRightFunction(pathname, arg);
+        printResult(sum,pathname);
+        return sum;
+    }
     else
     {
-        sum=callRightFunction(pathname,arg);
+        
         pid_t pid;
         DIR * newDir = opendir(pathname); //apontador para os conteudos da pasta
         struct dirent *dp;
@@ -108,10 +111,12 @@ int max_depth, Args arg)
             new_paths[i] = malloc(200*sizeof(char));
         }
         
-        char *newPathname;
-        char barra[1] = {'/'};
-        newPathname = pathname;
-        strcat(newPathname,barra);
+
+
+
+        char *newPathname=malloc(strlen(pathname)*sizeof(char));
+        strcpy(newPathname,pathname);
+        strcat(newPathname,"/");
         char *tmp_path = (char*) malloc(200*sizeof(char));
         for (int i = 0; i < idx; i++)
         {
@@ -174,8 +179,11 @@ int max_depth, Args arg)
                     
                 }
             }
-            else
-                sum+=callRightFunction(new_paths[i], arg);
+            else{
+                int s=callRightFunction(new_paths[i], arg);
+                sum+=s;
+                printResult(s,new_paths[i]);
+            }
          
         }
 
@@ -188,7 +196,8 @@ int max_depth, Args arg)
 
 
     }
-    
+    sum+=callRightFunction(pathname,arg);
+    printResult(sum,pathname);
     return sum;
 
 }

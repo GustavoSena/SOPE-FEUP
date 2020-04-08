@@ -70,7 +70,9 @@ int main(int argc, char *argv[], char *envp[])
         total=callRightFunction(args.path, args);
     printResult(total,args.path);
 
-    return 0;
 
+    //logExit(0);
+    
+    return 0;
 
 }
