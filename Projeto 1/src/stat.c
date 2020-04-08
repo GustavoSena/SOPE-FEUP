@@ -25,19 +25,9 @@ int callRightFunction(char * pathname, Args arg)
             printf("Error\n");
             exit(1);
         }
-        int size;
-        if(!S_ISLNK(info.st_mode)){
-            if(stat(pathname, &info)<0)
-            {
-                printf("Error\n");
-                exit(1);
-            }
-            size = info.st_size/block_size;
-            if (info.st_size%block_size != 0)
-                size++;
-        }
-        else
-            size = info.st_size/block_size;
+        int size = info.st_size/block_size;
+        if (info.st_size%block_size != 0)
+            size++;
         
         printResult(size,pathname);
         return size;
@@ -59,8 +49,7 @@ int callRightFunction(char * pathname, Args arg)
             if (info.st_size%block_size != 0)
                 size++;
         }
-        
-        
+
         printResult(size,pathname);
         return size;
     }
@@ -80,7 +69,7 @@ int max_depth, Args arg)
         return callRightFunction(pathname, arg);
     else
     {
-        sum=callRightFunction(pathname, arg);
+        sum=callRightFunction(pathname,arg);
         pid_t pid;
         callRightFunction(pathname, arg);
         DIR * newDir = opendir(pathname); //apontador para os conteudos da pasta
