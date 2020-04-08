@@ -25,11 +25,11 @@ int callRightFunction(char * pathname, Args arg)
             printf("Error\n");
             logExit(1);
         }
-        int size = info.st_size/block_size;
-        if (info.st_size%block_size != 0)
-            size++;
+        int size =info.st_blocks * 512 /block_size;
+       /*  if (info.st_size%block_size != 0)
+            size++; */
         
-        
+        //printResult(size,pathname);
         return size;
     }
     else{
@@ -59,7 +59,7 @@ int callRightFunction(char * pathname, Args arg)
 
         }
 
-        
+        //printResult(size,pathname);
         return size;
     }
     
@@ -74,14 +74,16 @@ int max_depth, Args arg)
 {
 
     int sum=0;
-    if (max_depth == 0){ 
-        sum =callRightFunction(pathname, arg);
+
+    if (max_depth == 0){
+        sum=callRightFunction(pathname,arg);
         printResult(sum,pathname);
         return sum;
     }
+        
     else
     {
-        
+        sum=0;
         pid_t pid;
         DIR * newDir = opendir(pathname); //apontador para os conteudos da pasta
         struct dirent *dp;
@@ -110,12 +112,11 @@ int max_depth, Args arg)
         {
             new_paths[i] = malloc(200*sizeof(char));
         }
-        
-
-
-
-        char *newPathname=malloc(strlen(pathname)*sizeof(char));
+        char *newPathname=malloc(strlen(pathname)*sizeof(char)); 
         strcpy(newPathname,pathname);
+       /*  char *newPathname;
+        char barra[1] = {'/'}; */
+        newPathname = pathname;
         strcat(newPathname,"/");
         char *tmp_path = (char*) malloc(200*sizeof(char));
         for (int i = 0; i < idx; i++)
@@ -184,8 +185,8 @@ int max_depth, Args arg)
                 sum+=s;
                 printResult(s,new_paths[i]);
             }
-         
         }
+
 
         for (int i=0; i<idx;i++){
             free(new_files[i]);
