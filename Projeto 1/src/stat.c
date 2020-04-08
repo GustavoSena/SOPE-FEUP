@@ -1,3 +1,5 @@
+
+
 #include "stat.h"
 
 
@@ -16,7 +18,7 @@ bool isDirectory(char * pathname)
 
 int callRightFunction(char * pathname, Args arg)
 {
-
+    int size;
 
     if (arg.dereference){
         struct stat info;
@@ -25,12 +27,12 @@ int callRightFunction(char * pathname, Args arg)
             printf("Error\n");
             logExit(1);
         }
-        int size =info.st_blocks * 512 /block_size;
+        size =info.st_blocks * 512 /block_size;
        /*  if (info.st_size%block_size != 0)
             size++; */
         
         //printResult(size,pathname);
-        return size;
+        
     }
     else{
         struct stat info;
@@ -40,51 +42,42 @@ int callRightFunction(char * pathname, Args arg)
             logExit(1);
         }
         
-        int size;
-        if(S_ISLNK(info.st_mode))
-            if(!arg.bytes)
-                size = info.st_size/block_size; 
-            else
-                size=info.st_size;
+        
+       
+        if(!arg.bytes)
+            size = info.st_blocks * 512 /block_size;
+        else
+            size=info.st_size;
                 
         
-        else{
-            if(!arg.bytes){
-                size = info.st_size/block_size;
-                if (info.st_size%block_size != 0)
-                    size++;
-            }
-            else
-                size=info.st_size;
-
-        }
+       
 
         //printResult(size,pathname);
-        return size;
+        
     }
-    
+    return size;
 }
 
 
 
 
 
-int  getDirectoryInfo(char * pathname,
-int max_depth, Args arg)
+int  getDirectoryInfo(char * pathname, int max_depth, Args arg)
 {
 
     int sum=0;
 
-    if (max_depth == 0){
+    /*if (max_depth == 0){
         sum=callRightFunction(pathname,arg);
         printResult(sum,pathname);
         return sum;
     }
         
     else
-    {
-        sum=0;
+    {*/
+        
         pid_t pid;
+        //callRightFunction(pathname, arg);
         DIR * newDir = opendir(pathname); //apontador para os conteudos da pasta
         struct dirent *dp;
        
@@ -102,11 +95,11 @@ int max_depth, Args arg)
         
                 strcpy(new_files[idx], dp->d_name);
                 idx++;
+                
             }
         }
         closedir(newDir);
     
-
         char **new_paths = malloc(idx*sizeof(char*));
         for (int i = 0; i < idx; i++)
         {
@@ -114,19 +107,18 @@ int max_depth, Args arg)
         }
         char *newPathname=malloc(strlen(pathname)*sizeof(char)); 
         strcpy(newPathname,pathname);
-       /*  char *newPathname;
-        char barra[1] = {'/'}; */
+     
         newPathname = pathname;
         strcat(newPathname,"/");
         char *tmp_path = (char*) malloc(200*sizeof(char));
         for (int i = 0; i < idx; i++)
         {
+
             strcpy(tmp_path, newPathname);
             strcat(tmp_path, new_files[i]);
             strcpy(new_paths[i], tmp_path);
-        }
-
     
+        }
 
         for(int i = 0; i < idx; i++)
         {
@@ -134,8 +126,6 @@ int max_depth, Args arg)
 
             if(isDirectory(new_paths[i]))
             {
-                
-
                 int fd[2];
 
                 if (pipe(fd) < 0) {
@@ -169,21 +159,23 @@ int max_depth, Args arg)
                 {
                     
                     close(fd[READ]);
-                    int size =getDirectoryInfo(new_paths[i], max_depth-1,arg);
+                    int size = getDirectoryInfo(new_paths[i], max_depth-1,arg);
                     
                     if(!arg.sep_dirs) {
                         write(fd[WRITE],&size,sizeof(size));
-                         char temp[30];
+                        char temp[30];
                         sprintf(temp, "%d", size);
                         logSendPipe(temp);
                     }
+                    exit(0);
                     
                 }
             }
             else{
                 int s=callRightFunction(new_paths[i], arg);
                 sum+=s;
-                printResult(s,new_paths[i]);
+                if(max_depth>0)
+                    printResult(s,new_paths[i]);
             }
         }
 
@@ -196,9 +188,11 @@ int max_depth, Args arg)
         free(new_paths);
 
 
-    }
+   // }
     sum+=callRightFunction(pathname,arg);
-    printResult(sum,pathname);
+    if(max_depth>=0)
+        printResult(sum,pathname);
+    
     return sum;
 
 }
