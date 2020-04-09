@@ -19,8 +19,7 @@ void createReg(Reg * reg,char *action){
     reg->time=((double)(clock()-beginTime))/(CLOCKS_PER_SEC/(double)1000.0);
     reg->pid=getpid();
     strcpy(reg->action, action);
-    //reg->action=action;
-    strncpy(reg->info,"Command: ", sizeof("Command: "));
+    strcpy(reg->info,"Command: ");
 }
 
 void writeReg(Reg * reg){

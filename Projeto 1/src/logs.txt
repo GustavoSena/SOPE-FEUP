@@ -1,30 +1,43 @@
-0.26 - 00032593 - CREATE - Command: ./simpledu -l ../TestDir -a --block-size=1024 --max-depth=1 -L
-0.44 - 00032593 - ENTRY - 8 ../TestDir/symbolic_link
-0.53 - 00032593 - ENTRY - 496 ../TestDir/image_link
--1.58 - 00032601 - SEND_PIPE - Command: 596
--1.39 - 00032600 - RECV_PIPE - Command: 596
--1.29 - 00032600 - SEND_PIPE - Command: 720
--0.75 - 00032599 - RECV_PIPE - Command: 720
--0.56 - 00032599 - SEND_PIPE - Command: 7552
--0.74 - 00032598 - RECV_PIPE - Command: 7552
--0.51 - 00032598 - SEND_PIPE - Command: 22660
--1.39 - 00032597 - RECV_PIPE - Command: 22660
--1.27 - 00032597 - SEND_PIPE - Command: 22764
--1.14 - 00032596 - RECV_PIPE - Command: 22764
--1.00 - 00032596 - SEND_PIPE - Command: 33864
--0.62 - 00032595 - RECV_PIPE - Command: 33864
--1.61 - 00032602 - SEND_PIPE - Command: 104
-0.03 - 00032595 - RECV_PIPE - Command: 104
-0.17 - 00032595 - ENTRY - 146632 ../TestDir/er/
-0.21 - 00032595 - SEND_PIPE - Command: 146632
-0.85 - 00032593 - RECV_PIPE - Command: 146632
-0.90 - 00032593 - ENTRY - 8 ../TestDir/example.txt
--1.79 - 00032603 - ENTRY - 16 ../TestDir/testerdir/
--1.72 - 00032603 - SEND_PIPE - Command: 16
-1.09 - 00032593 - RECV_PIPE - Command: 16
--1.80 - 00032604 - ENTRY - 12 ../TestDir/meow/
--1.72 - 00032604 - SEND_PIPE - Command: 12
-1.25 - 00032593 - RECV_PIPE - Command: 12
-1.29 - 00032593 - ENTRY - 496 ../TestDir/menus1.bmp
-1.34 - 00032593 - ENTRY - 147672 ../TestDir/
-1.38 - 00032593 - EXIT - 0
+0.14 - 00005569 - CREATE - Command: ./simpledu -l ../TestDir -a --block-size=1024 --max-depth=1 -L
+0.35 - 00005569 - ENTRY - 8 ../TestDir/symbolic_link
+0.50 - 00005569 - ENTRY - 496 ../TestDir/image_link
+8887822230894191817827946734072350910301471929285378614555520167318691652413402718236226400782530121076037791650810103745730496328185054344777184597940969649989737519476816435960853510042385442561315970485066864924995018463695837709801153129021746184192.00 - 00000047 - Create../TestDir/er/code/tux_backwards/code/img_files/tux_backwards/test/ - -l  -a --block-size=1024 -L --max_depth=-7
+-0.90 - 00005579 - SEND_PIPE - Command: 596
+-0.76 - 00005577 - RECV_PIPE - Command: 596
+-0.69 - 00005577 - Create../TestDir/er/code/tux_backwards/code/img_files/tux_backwards/ - -l  -a --block-size=1024 -L --max_depth=-6
+-0.66 - 00005577 - SEND_PIPE - Command: 720
+-0.27 - 00005576 - RECV_PIPE - Command: 720
+-0.18 - 00005576 - Create../TestDir/er/code/tux_backwards/code/img_files/ - -l  -a --block-size=1024 -L --max_depth=-5
+-0.15 - 00005576 - SEND_PIPE - Command: 7552
+-0.24 - 00005575 - RECV_PIPE - Command: 7552
+-0.10 - 00005575 - Create../TestDir/er/code/tux_backwards/code/ - -l  -a --block-size=1024 -L --max_depth=-4
+-0.07 - 00005575 - SEND_PIPE - Command: 22660
+-0.93 - 00005574 - RECV_PIPE - Command: 22660
+-0.85 - 00005574 - Create../TestDir/er/code/tux_backwards/ - -l  -a --block-size=1024 -L --max_depth=-3
+-0.82 - 00005574 - SEND_PIPE - Command: 22764
+-0.62 - 00005572 - RECV_PIPE - Command: 22764
+-0.53 - 00005572 - Create../TestDir/er/code/ - -l  -a --block-size=1024 -L --max_depth=-2
+-0.51 - 00005572 - SEND_PIPE - Command: 33864
+-0.07 - 00005570 - RECV_PIPE - Command: 33864
+-1.02 - 00005581 - Create../TestDir/er/tux_backwards/ - -l  -a --block-size=1024 -L --max_depth=-2
+-0.93 - 00005581 - SEND_PIPE - Command: 104
+0.41 - 00005570 - RECV_PIPE - Command: 104
+0.49 - 00005570 - ENTRY - 146632 ../TestDir/er/
+0.52 - 00005570 - Create../TestDir/er - -l  -a --block-size=1024 -L --max_depth=-1
+0.55 - 00005570 - SEND_PIPE - Command: 146632
+0.88 - 00005569 - RECV_PIPE - Command: 146632
+0.92 - 00005569 - ENTRY - 8 ../TestDir/example.txt
+1.08 - 00005569 - RECV_SIGNAL - 2
+-1.05 - 00005582 - ENTRY - 16 ../TestDir/testerdir/
+-0.93 - 00005582 - Create../TestDir/testerdir - -l  -a --block-size=1024 -L --max_depth=-1
+-0.91 - 00005582 - SEND_PIPE - Command: 16
+1.26 - 00005569 - SEND_SIGNAL - Sent 18 to process 5569
+1.32 - 00005569 - RECV_SIGNAL - 18
+1.37 - 00005569 - RECV_PIPE - Command: 16
+-1.02 - 00005585 - ENTRY - 12 ../TestDir/meow/
+-0.87 - 00005585 - Create../TestDir/meow - -l  -a --block-size=1024 -L --max_depth=-1
+-0.81 - 00005585 - SEND_PIPE - Command: 12
+1.56 - 00005569 - RECV_PIPE - Command: 12
+1.64 - 00005569 - ENTRY - 496 ../TestDir/menus1.bmp
+1.72 - 00005569 - ENTRY - 147672 ../TestDir/
+1.76 - 00005569 - EXIT - 0

@@ -1,10 +1,11 @@
 
 
 #include "stat.h"
-
+#include "signal_handlers.h"
 
 static int block_size; 
-
+pid_t child = 0;
+pid_t main_prg;
 bool isDirectory(char * pathname)
 {
     struct stat info;
@@ -66,16 +67,7 @@ int  getDirectoryInfo(char * pathname, int max_depth, Args arg)
 {
 
     int sum=0;
-
-    /*if (max_depth == 0){
-        sum=callRightFunction(pathname,arg);
-        printResult(sum,pathname);
-        return sum;
-    }
-        
-    else
-    {*/
-        
+    
         pid_t pid;
         //callRightFunction(pathname, arg);
         DIR * newDir = opendir(pathname); //apontador para os conteudos da pasta
@@ -83,7 +75,7 @@ int  getDirectoryInfo(char * pathname, int max_depth, Args arg)
        
         char **new_files = malloc(200*sizeof(char*));
         
-            
+           
         int idx = 0;
         while((dp = readdir(newDir)) != NULL)
         {
@@ -140,7 +132,7 @@ int  getDirectoryInfo(char * pathname, int max_depth, Args arg)
                 }
                 else if (pid > 0) //processo pai
                 {
-
+                    if (getpgrp() == main_prg) { child = pid; }
                     close(fd[WRITE]);
                     int status = 0;
                     waitpid(-1, &status, 0);
@@ -157,9 +149,11 @@ int  getDirectoryInfo(char * pathname, int max_depth, Args arg)
                 }
                 else //processo filho
                 {
-                    
-                    close(fd[READ]);
-                    int size = getDirectoryInfo(new_paths[i], max_depth-1,arg);
+					if (getpgrp() == main_prg) {
+                        setpgid(pid, getpid());
+                    }
+					close(fd[READ]);
+					int size = getDirectoryInfo(new_paths[i], max_depth-1,arg);
 					logCreateFork(arg, max_depth - 1, new_paths[i]);
 					if (!arg.sep_dirs)
 					{
@@ -189,7 +183,6 @@ int  getDirectoryInfo(char * pathname, int max_depth, Args arg)
         free(new_paths);
 
 
-   // }
     sum+=callRightFunction(pathname,arg);
     if(max_depth>=0)
         printResult(sum,pathname);

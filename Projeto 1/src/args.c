@@ -7,7 +7,7 @@ Args process_args(int argc, char *argv[]){
     Args args;
     args.all=0;
     args.bytes=0;
-    args.block_size=1024;
+    args.block_size=0;
     args.dereference=0;
     args.sep_dirs=0;
     args.max_depth=__INT_MAX__;
@@ -114,7 +114,7 @@ char** get_cmd_args(Args args){
 		strcpy(cmd_args[i],"-b");
 		i++;
 	}
-	if(args.block_size!=1024){
+	if(args.block_size!=0){
 		sprintf(cmd_args[i],"--block-size=%d",args.block_size);
 		i++;
 	}
@@ -145,7 +145,7 @@ char * argline(Args args){
 		strcat(line," -b");
 		
 	}
-	if(args.block_size!=1024){
+	if(args.block_size!=0){
 		char s[40];
 		sprintf(s," --block-size=%d",args.block_size);
 		strcat(line,s);
