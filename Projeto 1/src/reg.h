@@ -11,6 +11,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdint.h>
+#include "args.h"
 
 
 typedef struct {
@@ -30,3 +31,4 @@ void logSendSig(pid_t pid,int sig);
 void logRecvPipe(char* info);
 void logSendPipe(char* message);
 void logEntry(int size, char *path);
+void logCreateFork(Args arg, int max_depth, char *new_path);

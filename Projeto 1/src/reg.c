@@ -86,5 +86,14 @@ void logEntry(int size, char* path) {
 }
 
 
-
+void logCreateFork(Args arg, int max_depth,char * new_path){
+	arg.max_depth = max_depth;
+    
+	Reg reg;
+	createReg(&reg, "Create");
+	sprintf(reg.info, "-l ");
+	strcat(reg.action, new_path);
+	strcat(reg.info, argline(arg));
+	writeReg(&reg);
+}
 
