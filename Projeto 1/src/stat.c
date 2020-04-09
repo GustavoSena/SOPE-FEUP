@@ -160,14 +160,15 @@ int  getDirectoryInfo(char * pathname, int max_depth, Args arg)
                     
                     close(fd[READ]);
                     int size = getDirectoryInfo(new_paths[i], max_depth-1,arg);
-                    
-                    if(!arg.sep_dirs) {
-                        write(fd[WRITE],&size,sizeof(size));
+					logCreateFork(arg, max_depth - 1, new_paths[i]);
+					if (!arg.sep_dirs)
+					{
+						write(fd[WRITE],&size,sizeof(size));
                         char temp[30];
                         sprintf(temp, "%d", size);
                         logSendPipe(temp);
-                    }
-                    exit(0);
+					}
+					exit(0);
                     
                 }
             }

@@ -8,6 +8,7 @@
 #include <fcntl.h>
 #include <string.h>
 #include <signal.h>
+#include "reg.h"
 
 void sigint_handler(int signo);
 
