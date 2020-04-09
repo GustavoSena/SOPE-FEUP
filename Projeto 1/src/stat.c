@@ -79,10 +79,8 @@ int  getDirectoryInfo(char * pathname, int max_depth, Args arg)
         printResult(sum,pathname);
         return sum;
     }
-        
     else
     {
-        sum=0;
         pid_t pid;
         callRightFunction(pathname, arg);
         DIR * newDir = opendir(pathname); //apontador para os conteudos da pasta

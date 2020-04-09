@@ -63,7 +63,8 @@ int main(int argc, char *argv[], char *envp[])
     setBlockSize(args.block_size);
     int total; 
     initLogs();
-    logCreate(argc,argv);
+    
+logCreate(argc,argv);
     if(isDirectory(args.path)){
         total = getDirectoryInfo(args.path, args.max_depth, args);
     }
