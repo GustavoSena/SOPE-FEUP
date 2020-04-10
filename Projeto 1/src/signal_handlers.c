@@ -11,7 +11,7 @@ void sigint_handler(int signo)
     {
         printf( "Are you sure you want to exit? [Y/N]\n ");
 		answer = getchar();
-        while ( getchar() != '\n' );
+        while ( getchar() != '\n' ){}
 		if (answer == 'N'|| answer == 'n')
 		{
             logSendSig(pid, SIGCONT);

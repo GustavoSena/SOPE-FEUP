@@ -18,14 +18,14 @@ int main(int argc, char *argv[], char *envp[])
     sigemptyset(&act_term.sa_mask);
     act_term.sa_flags = 0;
 
-	//struct sigaction act_stcp;
-
-
 	struct sigaction act_cont;
     act_cont.sa_handler = sigcont_handler;
     sigemptyset(&act_cont.sa_mask);
     act_cont.sa_flags = 0;
 
+
+
+    initLogs();
     if (sigaction(SIGINT,&act_int,NULL) < 0)  {        
         fprintf(stderr,"Unable to install SIGINT handler\n");        
         logExit(1);  
@@ -46,7 +46,7 @@ int main(int argc, char *argv[], char *envp[])
 	Args args = process_args(argc,argv);
     setBlockSize(args.block_size);
     int total; 
-    initLogs();
+    
     logCreate(argc,argv);
     if(isDirectory(args.path)){
         total = getDirectoryInfo(args.path, args.max_depth, args);

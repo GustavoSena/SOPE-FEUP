@@ -32,7 +32,7 @@ bool isDirectory(char * pathname);
 
 bool isFile(char * pathname);
 
-
+bool isLinkOrFile(char *pathname, Args arg);
 
 int callRightFunction(char * pathname, Args arg);
 
