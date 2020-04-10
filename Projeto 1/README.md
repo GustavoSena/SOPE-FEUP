@@ -1,0 +1,3 @@
+Todas as funcionalidades pedidas estão implementadas e a funcionar mais ou menos como devido. Não conseguimos replicar perfeitamente o método de arredondamento do comando du, ou seja, quando o block size não for nem múltiplo nem divisor de 1024 ou for um valor muito grande, os valores são ligeiramente discrepantes.
+Para além disso, a funcionalidade adicional de tratar do SIGINT está a ter alguns problemas. Se mandarmos dois SIGCONT por vezes o valor de ocupação dos diretórios deixa de ser o correto. O programa também envia uma vez os sinais mas recebe o número de filhos que tem.
+Utilizamos recursividade em vez de execs uma vez que nos foi muito mais fácil de pôr a funcionalidade dos diretórios a funcionar.
