@@ -8,6 +8,7 @@ int main(int argc, char *argv[], char *envp[])
     
 
     main_prg = getpgrp();
+    initLogs();
     struct sigaction act_int;  
     act_int.sa_handler = sigint_handler;  
     sigemptyset(&act_int.sa_mask);  
@@ -23,9 +24,12 @@ int main(int argc, char *argv[], char *envp[])
     sigemptyset(&act_cont.sa_mask);
     act_cont.sa_flags = 0;
 
+    struct sigaction act_stp;
+    act_stp.sa_handler = sigstp_handler;
+    sigemptyset(&act_stp.sa_mask);
+    act_stp.sa_flags = 0;
 
-
-    initLogs();
+    
     if (sigaction(SIGINT,&act_int,NULL) < 0)  {        
         fprintf(stderr,"Unable to install SIGINT handler\n");        
         logExit(1);  
@@ -40,8 +44,11 @@ int main(int argc, char *argv[], char *envp[])
         fprintf(stderr,"Unable to install SIGCONT handler\n");        
         logExit(1);  
     }  
+     if (sigaction(SIGTSTP,&act_stp,NULL) < 0)  {        
+        fprintf(stderr,"Unable to install SIGSTOP handler\n");        
+        logExit(1);  
+    }  
 
-	//signal(SIGINT, sigint_handler);
 
 	Args args = process_args(argc,argv);
     setBlockSize(args.block_size);

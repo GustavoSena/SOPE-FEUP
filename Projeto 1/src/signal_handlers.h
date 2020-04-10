@@ -9,10 +9,12 @@
 #include <string.h>
 #include <signal.h>
 #include "reg.h"
-#include "reg.h"
+
 
 void sigint_handler(int signo);
 
 void sigcont_handler(int signo);
 
 void sigterm_handler(int signo);
+
+void sigstp_handler(int signo);

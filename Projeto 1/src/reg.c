@@ -46,17 +46,17 @@ void logExit(int status) {
     exit(status);
 }
 
-void logRecvSig(int sig) {
+void logRecvSig(char * sig) {
     Reg reg; 
     createReg(&reg, "RECV_SIGNAL");
-    sprintf(reg.info, "%d", sig);
+    sprintf(reg.info, "%s", sig);
     writeReg(&reg);
 }
 
-void logSendSig(pid_t pid,int sig) {
+void logSendSig(pid_t pid,char *sig) {
     Reg reg; 
     createReg(&reg, "SEND_SIGNAL");
-    sprintf(reg.info, "Sent %d to process %d", sig, pid);
+    sprintf(reg.info, "Sent %s to process %d", sig, pid);
     writeReg(&reg);
 }
 

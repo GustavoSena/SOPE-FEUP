@@ -175,8 +175,10 @@ int  getDirectoryInfo(char * pathname, int max_depth, Args arg)
             else //processo filho
             {
 				if (getpgrp() == main_prg) {
-                    setpgid(pid, getpid());
+                    setpgid(getpid(), getpid());
                 }
+
+
 				close(fd[READ]);
 				int size = getDirectoryInfo(new_paths[i], max_depth-1,arg);
 				logCreateFork(arg, max_depth - 1, new_paths[i]);
@@ -187,7 +189,7 @@ int  getDirectoryInfo(char * pathname, int max_depth, Args arg)
                     sprintf(temp, "%d", size);
                     logSendPipe(temp);
 				}
-				exit(0);
+				logExit(0);
                     
             }
         }

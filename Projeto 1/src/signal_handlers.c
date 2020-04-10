@@ -1,29 +1,40 @@
 #include "signal_handlers.h"
 
-extern pid_t main_prg;
+
+extern pid_t child;
 
 void sigint_handler(int signo)
 {
-    logRecvSig(SIGINT);
-    pid_t pid = main_prg;
+    logRecvSig("SIGINT");
+    pid_t pid = child;
     char answer;
-    while(1)
+
+    if(pid){
+		kill(-pid, SIGTSTP);
+		logSendSig(-pid, "SIGTSTP");
+	}
+	
+	while(1)
     {
         printf( "Are you sure you want to exit? [Y/N]\n ");
+		
 		answer = getchar();
-        while ( getchar() != '\n' ){}
-		if (answer == 'N'|| answer == 'n')
+		while ( getchar() != '\n' )
+            continue;
+
+		if (answer == 'N' || answer == 'n')
 		{
-            logSendSig(pid, SIGCONT);
             kill(-pid, SIGCONT);
+            logSendSig(-pid, "SIGCONT");
             break;  
         }
         else if(answer == 'Y' || answer == 'y')
         {
-            logSendSig(pid, SIGTERM);
             kill(-pid, SIGTERM);
-            break;
-        }
+            logSendSig(-pid, "SIGTERM");
+            logExit(143);
+			break;
+		}
         else
         {
             printf("Invalid input...\n");
@@ -33,13 +44,19 @@ void sigint_handler(int signo)
 
 void sigcont_handler(int signo)
 {
-    logRecvSig(SIGCONT);
+    logRecvSig("SIGCONT");
     printf("Continuing processes...\n");
 }
 
 void sigterm_handler(int signo)
 {
-    logRecvSig(SIGTERM);
+    logRecvSig("SIGTERM");
     printf("Terminating processes...\n");
     logExit(143);
+}
+
+
+void sigstp_handler(int signo){
+	logRecvSig("SIGTSTP");
+	pause();
 }
