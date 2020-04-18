@@ -15,8 +15,17 @@ typedef struct{
     char fifoname[528];
 }Args_qn;
 
-Args_qn process_args(int argc, char *argv[]);
+typedef struct{
+    int nsecs;
+    char fifoname[528];
+}Args_un;
 
 
+Args_qn process_args_qn(int argc, char *argv[]);
 
-void print_usage();
+Args_un process_args_un(int argc, char*argv[]);
+
+
+void print_usage_qn();
+
+void print_usage_un();
