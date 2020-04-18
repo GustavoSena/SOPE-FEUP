@@ -98,3 +98,4 @@ void logEntry(int size, char* path) {
 	writeReg(&reg);
 }
 
+ 

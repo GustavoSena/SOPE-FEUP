@@ -30,4 +30,4 @@ void logSendSig(pid_t pid,char * sig);
 void logRecvPipe(char* info);
 void logSendPipe(char* message);
 void logEntry(int size, char *path);
-void logCreateFork(Args arg, int max_depth, char *new_path);
+void logCreateFork(Args arg, int max_depth, char *new_path); 
