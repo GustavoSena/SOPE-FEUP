@@ -11,6 +11,7 @@
 #include "utils.h"
 
 char public_fifo[20];
+int fd;
 
 void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
 {
@@ -37,7 +38,9 @@ void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
 
     //Tratar da parte de dar display da informação
 
-    
+    close(fd1);
+    close(fd2);
+    unlink(fifo);
 
 }
 
@@ -45,6 +48,24 @@ void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
 int main(int argc, char *argv[])
 {
 
+    Args_un arg = process_args_un(argc, argv);
+    strcpy(public_fifo, arg.fifoname);
+    
     int i = 1;
+    int current_time = 0;
+    do{
+        fd = open(public_fifo, O_WRONLY);
+    } while(fd == -1);
+
+    while(current_time < arg.nsecs)
+    {
+        pthread_t tid;
+        pthread_create(&tid, NULL, sendRequest, (void *)&i);
+        i++;
+        current_time+=2;
+        usleep(2*1000000);
+    }
+
+    close(fd);
 
 }
