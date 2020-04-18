@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall
-DEPS = Qn.o Un.o args.o
-OBJ = Qn.o Un.o args.o
+DEPS = Qn.o Un.o args.o reg.h
+OBJ = Qn.o Un.o args.o reg.c
 TARGETS = Qn Un
 
 all: p07_client p07_server
