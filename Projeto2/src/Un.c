@@ -15,7 +15,7 @@ int fd;
 
 void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
 {
-    int fd1, fd2;
+    int fd2;
     time_t t;
     srand((unsigned) time(&t));
     Request request;
@@ -25,11 +25,7 @@ void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
     request.pl = -1;
     request.dur = (rand() % 410001) + 10000; 
 
-    do{
-        fd1 = open(public_fifo, O_WRONLY);
-    } while(fd1 == -1);
-
-    write(fd1, &request, sizeof(request));
+    write(fd, &request, sizeof(request));
 
     char *fifo = fifo_name(request.pid, request.tid);
     mkfifo(fifo, 0660);
@@ -38,7 +34,6 @@ void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
 
     //Tratar da parte de dar display da informação
 
-    close(fd1);
     close(fd2);
     unlink(fifo);
 
@@ -67,5 +62,7 @@ int main(int argc, char *argv[])
     }
 
     close(fd);
+
+    pthread_exit(0);
 
 }

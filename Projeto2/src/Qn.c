@@ -62,5 +62,7 @@ int main(int argc, char *argv[])
 
     close(fd1);
     unlink(public_fifo);
+
+    pthread_exit(0);
    
 }
