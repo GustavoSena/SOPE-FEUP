@@ -19,3 +19,9 @@ fi
 # -L  --dereference       - segue links simbolicos
 # -S  --separate-dirs     - não inclui o tamanho dos subdirs
 # --max-depth=N           - limita a informação exibida a N (0,1, …) níveis de profundidade de diretórios.
+
+
+
+
+
+

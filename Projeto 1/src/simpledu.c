@@ -1,33 +1,14 @@
 
-
 #include "simpledu.h"
-
-
-
-
-/* void sigint_handler(int signo)
-{
-    write(STDOUT_FILENO, "Are you sure you want to exit?\n ", 33);
-}
-
-// void sigcont_handler(int signo)
-// {
-//     write(STDOUT_FILENO, "Continuing processes...\n", 25);
-// }
-
-
-// void sigterm_handler(int signo)
-// {
-//     write(STDOUT_FILENO, "Terminating processes...\n", 26);
-// }
-
-*/
-
+#include "signal_handlers.h"
+extern pid_t main_prg;
 
 int main(int argc, char *argv[], char *envp[])
 {
-/*     char[BUFFER_SIZE] command;
     
+
+    main_prg = getpgrp();
+    initLogs();
     struct sigaction act_int;  
     act_int.sa_handler = sigint_handler;  
     sigemptyset(&act_int.sa_mask);  
@@ -35,31 +16,41 @@ int main(int argc, char *argv[], char *envp[])
 
     struct sigaction act_term;
     act_term.sa_handler = sigterm_handler;
-    sigempty(&act_terms.sa_mask);
+    sigemptyset(&act_term.sa_mask);
     act_term.sa_flags = 0;
 
-    struct sigaction act_cont;
+	struct sigaction act_cont;
     act_cont.sa_handler = sigcont_handler;
-    sigemptyset(&act_cont.sa_handler);
+    sigemptyset(&act_cont.sa_mask);
     act_cont.sa_flags = 0;
 
+    struct sigaction act_stp;
+    act_stp.sa_handler = sigstp_handler;
+    sigemptyset(&act_stp.sa_mask);
+    act_stp.sa_flags = 0;
+
+    
     if (sigaction(SIGINT,&act_int,NULL) < 0)  {        
         fprintf(stderr,"Unable to install SIGINT handler\n");        
-        exit(1);  
+        logExit(1);  
     } 
 
     if (sigaction(SIGTERM,&act_term,NULL) < 0)  {        
         fprintf(stderr,"Unable to install SIGTERM handler\n");        
-        exit(1);  
+        logExit(1);  
     } 
 
-    if (sigaction(SIGINT,&action,NULL) < 0)  {        
+    if (sigaction(SIGCONT,&act_cont,NULL) < 0)  {        
         fprintf(stderr,"Unable to install SIGCONT handler\n");        
-        exit(1);  
-    }  */
+        logExit(1);  
+    }  
+     if (sigaction(SIGTSTP,&act_stp,NULL) < 0)  {        
+        fprintf(stderr,"Unable to install SIGSTOP handler\n");        
+        logExit(1);  
+    }  
 
-    
-    Args args = process_args(argc,argv);
+
+	Args args = process_args(argc,argv);
     setBlockSize(args.block_size);
     int total; 
     initLogs();

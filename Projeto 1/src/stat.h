@@ -16,10 +16,11 @@
 
 
 
+
 #define READ  0
 #define WRITE  1 
 
-//Decidir como fazer para apresentar a informação
+
 
 int getInfo(char * pathname); // se for só para ler o nº de bytes, block_size = 1
 
@@ -31,7 +32,7 @@ bool isDirectory(char * pathname);
 
 bool isFile(char * pathname);
 
-
+bool isLinkOrFile(char *pathname, Args arg);
 
 int callRightFunction(char * pathname, Args arg);
 

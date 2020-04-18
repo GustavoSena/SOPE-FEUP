@@ -11,6 +11,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdint.h>
+#include "args.h"
 
 
 typedef struct {
@@ -25,8 +26,9 @@ void createReg(Reg * reg,char action[]);
 void writeReg(Reg * reg);
 void logCreate(int argc, char *argv[]);
 void logExit(int status);
-void logRecvSig(int sig);
-void logSendSig(pid_t pid,int sig);
+void logRecvSig(char * sig);
+void logSendSig(pid_t pid,char * sig);
 void logRecvPipe(char* info);
 void logSendPipe(char* message);
 void logEntry(int size, char *path);
+void logCreateFork(Args arg, int max_depth, char *new_path);

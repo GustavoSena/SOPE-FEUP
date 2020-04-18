@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include <stdio.h> 
@@ -8,8 +7,14 @@
 #include <sys/wait.h>
 #include <fcntl.h>
 #include <string.h>
-#include "args.h"
-#include "stat.h"
+#include <signal.h>
 #include "reg.h"
 
-#define BUFFER_SIZE 512 
+
+void sigint_handler(int signo);
+
+void sigcont_handler(int signo);
+
+void sigterm_handler(int signo);
+
+void sigstp_handler(int signo);

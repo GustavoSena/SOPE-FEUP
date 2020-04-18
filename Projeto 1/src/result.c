@@ -10,5 +10,7 @@ void printResult(int result , char * dir)
 	if (dir[strlen(dir) - 1] == '/')
 		dir[strlen(dir) - 1] = '\0';
 	write(STDOUT_FILENO, dir, strlen(dir));
-	write(STDOUT_FILENO, "\n", 2);
+	write(STDOUT_FILENO, "\n", 2); 
+
+
 }

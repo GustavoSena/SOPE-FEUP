@@ -1,30 +1,301 @@
-0.26 - 00032593 - CREATE - Command: ./simpledu -l ../TestDir -a --block-size=1024 --max-depth=1 -L
-0.44 - 00032593 - ENTRY - 8 ../TestDir/symbolic_link
-0.53 - 00032593 - ENTRY - 496 ../TestDir/image_link
--1.58 - 00032601 - SEND_PIPE - Command: 596
--1.39 - 00032600 - RECV_PIPE - Command: 596
--1.29 - 00032600 - SEND_PIPE - Command: 720
--0.75 - 00032599 - RECV_PIPE - Command: 720
--0.56 - 00032599 - SEND_PIPE - Command: 7552
--0.74 - 00032598 - RECV_PIPE - Command: 7552
--0.51 - 00032598 - SEND_PIPE - Command: 22660
--1.39 - 00032597 - RECV_PIPE - Command: 22660
--1.27 - 00032597 - SEND_PIPE - Command: 22764
--1.14 - 00032596 - RECV_PIPE - Command: 22764
--1.00 - 00032596 - SEND_PIPE - Command: 33864
--0.62 - 00032595 - RECV_PIPE - Command: 33864
--1.61 - 00032602 - SEND_PIPE - Command: 104
-0.03 - 00032595 - RECV_PIPE - Command: 104
-0.17 - 00032595 - ENTRY - 146632 ../TestDir/er/
-0.21 - 00032595 - SEND_PIPE - Command: 146632
-0.85 - 00032593 - RECV_PIPE - Command: 146632
-0.90 - 00032593 - ENTRY - 8 ../TestDir/example.txt
--1.79 - 00032603 - ENTRY - 16 ../TestDir/testerdir/
--1.72 - 00032603 - SEND_PIPE - Command: 16
-1.09 - 00032593 - RECV_PIPE - Command: 16
--1.80 - 00032604 - ENTRY - 12 ../TestDir/meow/
--1.72 - 00032604 - SEND_PIPE - Command: 12
-1.25 - 00032593 - RECV_PIPE - Command: 12
-1.29 - 00032593 - ENTRY - 496 ../TestDir/menus1.bmp
-1.34 - 00032593 - ENTRY - 147672 ../TestDir/
-1.38 - 00032593 - EXIT - 0
+0.44 - 00018228 - CREATE - Command: ./simpledu -l ../TestDir -a --block-size=1024 --max-depth=2 -L
+0.68 - 00018228 - ENTRY - 8 ../TestDir/symbolic_link
+0.79 - 00018228 - ENTRY - 496 ../TestDir/image_link
+-1.54 - 00018231 - ENTRY - 472 ../TestDir/er/cinco.xpm
+-1.34 - 00018231 - ENTRY - 4 ../TestDir/er/arrow.png
+-1.26 - 00018231 - ENTRY - 12 ../TestDir/er/coin-2.png
+-1.20 - 00018231 - ENTRY - 8 ../TestDir/er/buttjump-0.png
+-1.11 - 00018231 - ENTRY - 4 ../TestDir/er/airtux-hat.png
+-1.00 - 00018231 - ENTRY - 4 ../TestDir/er/coin-1.xpm
+-0.90 - 00018231 - ENTRY - 8 ../TestDir/er/burning-0.png
+-0.83 - 00018231 - ENTRY - 36 ../TestDir/er/cloud-mountains-forground.png
+-0.77 - 00018231 - ENTRY - 88 ../TestDir/er/bridgecloud-dark.png
+-0.73 - 00018231 - ENTRY - 4 ../TestDir/er/broken.png
+-0.68 - 00018231 - ENTRY - 424 ../TestDir/er/cloud-mountains-bottom.png
+-0.64 - 00018231 - ENTRY - 244 ../TestDir/er/arctis2.png
+-0.59 - 00018231 - ENTRY - 8 ../TestDir/er/burning-3.png
+-0.55 - 00018231 - ENTRY - 8 ../TestDir/er/arctis_top.jpg
+-0.49 - 00018231 - ENTRY - 44 ../TestDir/er/castle_foreground.png
+-0.45 - 00018231 - ENTRY - 4 ../TestDir/er/coin-5.xpm
+-0.41 - 00018231 - ENTRY - 104604 ../TestDir/er/code-ANTIGO.zip
+-0.36 - 00018231 - ENTRY - 12 ../TestDir/er/coin-1.png
+-0.32 - 00018231 - ENTRY - 88 ../TestDir/er/bluemountain-bottom.png
+-0.28 - 00018231 - ENTRY - 116 ../TestDir/er/arcticskies35.png
+-0.23 - 00018231 - ENTRY - 8 ../TestDir/er/air_display.png
+-0.19 - 00018231 - ENTRY - 20 ../TestDir/er/billboard-backflip.png
+-0.14 - 00018231 - ENTRY - 8 ../TestDir/er/burning-4.png
+-0.10 - 00018231 - ENTRY - 176 ../TestDir/er/block-snow-midground.png
+-0.05 - 00018231 - ENTRY - 172 ../TestDir/er/bluemountain2.png
+0.04 - 00018231 - ENTRY - 4 ../TestDir/er/az.po
+0.15 - 00018231 - ENTRY - 4 ../TestDir/er/bark-0.png
+0.23 - 00018231 - ENTRY - 40 ../TestDir/er/billboard-climbing.png
+0.29 - 00018231 - ENTRY - 316 ../TestDir/er/arctis_bottom_para3.png
+1.05 - 00018228 - RECV_SIGNAL - SIGINT
+1.24 - 00018228 - SEND_SIGNAL - Sent SIGTSTP to process -18231
+-2.00 - 00018237 - RECV_SIGNAL - SIGTSTP
+0.60 - 00018231 - RECV_SIGNAL - SIGTSTP
+1.48 - 00018228 - SEND_SIGNAL - Sent SIGCONT to process -18231
+0.77 - 00018231 - RECV_SIGNAL - SIGCONT
+-1.71 - 00018237 - RECV_SIGNAL - SIGCONT
+-1.69 - 00018246 - CREATE - Command: ../TestDir/er/code/tux_backwards/code/img_files/tux_backwards/test/-l  -a --block-size=1024 -L --max_depth=-6
+-1.50 - 00018246 - SEND_PIPE - Command: 596
+-1.48 - 00018246 - EXIT - 0
+-1.51 - 00018244 - RECV_PIPE - Command: 596
+-1.39 - 00018244 - CREATE - Command: ../TestDir/er/code/tux_backwards/code/img_files/tux_backwards/-l  -a --block-size=1024 -L --max_depth=-5
+-1.35 - 00018244 - SEND_PIPE - Command: 720
+-1.33 - 00018244 - EXIT - 0
+-1.17 - 00018243 - RECV_PIPE - Command: 720
+-0.91 - 00018243 - CREATE - Command: ../TestDir/er/code/tux_backwards/code/img_files/-l  -a --block-size=1024 -L --max_depth=-4
+-0.83 - 00018243 - SEND_PIPE - Command: 7552
+-0.78 - 00018243 - EXIT - 0
+-1.03 - 00018241 - RECV_PIPE - Command: 7552
+-0.68 - 00018241 - CREATE - Command: ../TestDir/er/code/tux_backwards/code/-l  -a --block-size=1024 -L --max_depth=-3
+-0.60 - 00018241 - SEND_PIPE - Command: 22660
+-0.57 - 00018241 - EXIT - 0
+-1.31 - 00018240 - RECV_PIPE - Command: 22660
+-1.14 - 00018240 - CREATE - Command: ../TestDir/er/code/tux_backwards/-l  -a --block-size=1024 -L --max_depth=-2
+-1.07 - 00018240 - SEND_PIPE - Command: 22764
+-1.05 - 00018240 - EXIT - 0
+-0.61 - 00018237 - RECV_PIPE - Command: 22764
+-0.40 - 00018237 - ENTRY - 33864 ../TestDir/er/code/
+-0.30 - 00018237 - CREATE - Command: ../TestDir/er/code-l  -a --block-size=1024 -L --max_depth=-1
+-0.24 - 00018237 - SEND_PIPE - Command: 33864
+-0.21 - 00018237 - EXIT - 0
+1.03 - 00018231 - RECV_PIPE - Command: 33864
+1.10 - 00018231 - ENTRY - 12 ../TestDir/er/cloud.png
+1.19 - 00018231 - ENTRY - 12 ../TestDir/er/coin-4.png
+1.25 - 00018231 - ENTRY - 4 ../TestDir/er/coin-0.xpm
+1.31 - 00018231 - ENTRY - 4 ../TestDir/er/burning-9.png
+1.40 - 00018231 - ENTRY - 1192 ../TestDir/er/arcticskies1.png
+1.47 - 00018231 - ENTRY - 12 ../TestDir/er/coin-7.png
+1.60 - 00018231 - ENTRY - 4 ../TestDir/er/coin-2.xpm
+1.67 - 00018231 - ENTRY - 4 ../TestDir/er/ambient_light.png
+1.74 - 00018231 - ENTRY - 8 ../TestDir/er/buttjump-5.png
+1.80 - 00018231 - ENTRY - 68 ../TestDir/er/bridgecloud-light.png
+1.86 - 00018231 - ENTRY - 8 ../TestDir/er/backflip.png
+1.97 - 00018231 - ENTRY - 8 ../TestDir/er/buttjump-1.png
+2.06 - 00018231 - ENTRY - 52 ../TestDir/er/billboard-resetpoint.png
+2.13 - 00018231 - ENTRY - 8 ../TestDir/er/buttjump-6.png
+2.19 - 00018231 - ENTRY - 28 ../TestDir/er/billboard-trampoline.png
+2.25 - 00018231 - ENTRY - 232 ../TestDir/er/bluemountain-middle.png
+2.31 - 00018231 - ENTRY - 4 ../TestDir/er/andale10.stf
+2.37 - 00018231 - ENTRY - 12 ../TestDir/er/cave2.jpg
+2.44 - 00018231 - ENTRY - 4 ../TestDir/er/clouds.png
+2.51 - 00018231 - ENTRY - 412 ../TestDir/er/block-snow-top.png
+2.58 - 00018231 - ENTRY - 108 ../TestDir/er/arctis_bottom.jpg
+2.64 - 00018231 - ENTRY - 4 ../TestDir/er/coins.h
+2.72 - 00018231 - ENTRY - 8 ../TestDir/er/burning-2.png
+2.81 - 00018231 - ENTRY - 128 ../TestDir/er/arcticskies2.png
+2.89 - 00018231 - ENTRY - 448 ../TestDir/er/arctis_para3.png
+3.02 - 00018231 - ENTRY - 8 ../TestDir/er/burning-5.png
+3.11 - 00018231 - ENTRY - 8 ../TestDir/er/buttjump-3.png
+3.17 - 00018231 - ENTRY - 88 ../TestDir/er/arctis.jpg
+3.23 - 00018231 - ENTRY - 4 ../TestDir/er/coin-4.xpm
+3.30 - 00018231 - ENTRY - 40 ../TestDir/er/bridgeocean-original.png
+3.39 - 00018231 - ENTRY - 28 ../TestDir/er/billboard-pickrock.png
+3.49 - 00018231 - ENTRY - 40 ../TestDir/er/billboard-bigtux.png
+3.57 - 00018231 - ENTRY - 8 ../TestDir/er/air.png
+3.68 - 00018231 - ENTRY - 4 ../TestDir/er/coin-6.xpm
+3.80 - 00018231 - ENTRY - 92 ../TestDir/er/bridgeocean-nofade.png
+3.90 - 00018231 - ENTRY - 8 ../TestDir/er/burning-7.png
+3.98 - 00018231 - ENTRY - 4 ../TestDir/er/climbable.png
+4.07 - 00018231 - ENTRY - 148 ../TestDir/er/arctis_para2.png
+4.15 - 00018231 - ENTRY - 8 ../TestDir/er/buttjump-4.png
+4.20 - 00018231 - ENTRY - 40 ../TestDir/er/billboard-fireflower.png
+4.26 - 00018231 - ENTRY - 4 ../TestDir/er/ambientsound.png
+4.31 - 00018231 - ENTRY - 4 ../TestDir/er/black_800px.png
+4.37 - 00018231 - ENTRY - 8 ../TestDir/er/burning-6.png
+4.42 - 00018231 - ENTRY - 1120 ../TestDir/er/cloud-mountains-background.png
+4.47 - 00018231 - ENTRY - 16 ../TestDir/er/bluemountain-top.png
+4.52 - 00018231 - ENTRY - 4 ../TestDir/er/center.png
+4.65 - 00018231 - ENTRY - 8 ../TestDir/er/coin-7.xpm
+4.73 - 00018231 - ENTRY - 40 ../TestDir/er/arctis_dark.jpg
+4.79 - 00018231 - ENTRY - 12 ../TestDir/er/coin-6.png
+4.83 - 00018231 - ENTRY - 4 ../TestDir/er/bicycleplatform.png
+4.88 - 00018231 - ENTRY - 48 ../TestDir/er/billboard-buttjump.png
+4.95 - 00018231 - ENTRY - 4 ../TestDir/er/charging-0.png
+5.04 - 00018231 - ENTRY - 4 ../TestDir/er/background.png
+5.13 - 00018231 - ENTRY - 692 ../TestDir/er/block-snow-background.png
+5.23 - 00018231 - ENTRY - 4 ../TestDir/er/clock.png
+5.30 - 00018231 - ENTRY - 4 ../TestDir/er/camera.png
+5.35 - 00018231 - ENTRY - 80 ../TestDir/er/bridgeocean-fade.png
+5.40 - 00018231 - ENTRY - 88 ../TestDir/er/arcticskies4.png
+5.45 - 00018231 - ENTRY - 4 ../TestDir/er/coins.c
+5.51 - 00018231 - ENTRY - 128 ../TestDir/er/arcticskies3.png
+5.56 - 00018231 - ENTRY - 12 ../TestDir/er/coin-3.png
+5.61 - 00018231 - ENTRY - 12 ../TestDir/er/coin-5.png
+5.71 - 00018231 - ENTRY - 12 ../TestDir/er/coin-0.png
+1.63 - 00018228 - RECV_SIGNAL - SIGINT
+6.05 - 00018231 - RECV_SIGNAL - SIGTSTP
+1.79 - 00018228 - SEND_SIGNAL - Sent SIGTSTP to process -18231
+-2.00 - 00018248 - RECV_SIGNAL - SIGTSTP
+1.93 - 00018228 - SEND_SIGNAL - Sent SIGCONT to process -18231
+-1.76 - 00018248 - RECV_SIGNAL - SIGCONT
+6.22 - 00018231 - RECV_SIGNAL - SIGCONT
+2.03 - 00018228 - RECV_PIPE - Command: 942813752
+2.13 - 00018228 - ENTRY - 8 ../TestDir/example.txt
+6.37 - 00018231 - RECV_PIPE - Command: 33864
+6.42 - 00018231 - ENTRY - 4 ../TestDir/er/charging-1.png
+6.52 - 00018231 - ENTRY - 4 ../TestDir/er/burning-8.png
+6.58 - 00018231 - ENTRY - 8 ../TestDir/er/burning-1.png
+-1.31 - 00018248 - ENTRY - 104 ../TestDir/er/tux_backwards/
+6.65 - 00018231 - ENTRY - 4 ../TestDir/er/candle-4.png
+-1.23 - 00018248 - CREATE - Command: ../TestDir/er/tux_backwards-l  -a --block-size=1024 -L --max_depth=-1
+6.76 - 00018231 - ENTRY - 68 ../TestDir/er/billboard-plant.png
+-1.18 - 00018248 - SEND_PIPE - Command: 104
+-1.14 - 00018248 - EXIT - 0
+6.83 - 00018231 - ENTRY - 8 ../TestDir/er/buttjump-2.png
+7.06 - 00018231 - ENTRY - 180392 ../TestDir/er/
+7.12 - 00018231 - CREATE - Command: ../TestDir/er-l  -a --block-size=1024 -L --max_depth=0
+7.15 - 00018231 - SEND_PIPE - Command: 180392
+7.17 - 00018231 - EXIT - 0
+-1.71 - 00018249 - ENTRY - 4 ../TestDir/testerdir/eeeeeeeee
+-1.41 - 00018249 - ENTRY - 4 ../TestDir/testerdir/Untitled Document 1
+-1.29 - 00018249 - ENTRY - 4 ../TestDir/testerdir/whaaaat
+-1.18 - 00018249 - ENTRY - 16 ../TestDir/testerdir/
+-1.12 - 00018249 - CREATE - Command: ../TestDir/testerdir-l  -a --block-size=1024 -L --max_depth=0
+-1.06 - 00018249 - SEND_PIPE - Command: 16
+-1.03 - 00018249 - EXIT - 0
+2.61 - 00018228 - RECV_PIPE - Command: 16
+-1.78 - 00018250 - ENTRY - 8 ../TestDir/meow/loser.png
+-1.56 - 00018250 - ENTRY - 12 ../TestDir/meow/
+-1.48 - 00018250 - CREATE - Command: ../TestDir/meow-l  -a --block-size=1024 -L --max_depth=0
+-1.42 - 00018250 - SEND_PIPE - Command: 12
+-1.39 - 00018250 - EXIT - 0
+3.03 - 00018228 - RECV_PIPE - Command: 12
+-1.39 - 00018251 - ENTRY - 472 ../TestDir/test_link/cinco.xpm
+-1.10 - 00018251 - ENTRY - 4 ../TestDir/test_link/arrow.png
+-1.01 - 00018251 - ENTRY - 12 ../TestDir/test_link/coin-2.png
+-0.94 - 00018251 - ENTRY - 8 ../TestDir/test_link/buttjump-0.png
+-0.86 - 00018251 - ENTRY - 4 ../TestDir/test_link/airtux-hat.png
+-0.79 - 00018251 - ENTRY - 4 ../TestDir/test_link/coin-1.xpm
+-0.72 - 00018251 - ENTRY - 8 ../TestDir/test_link/burning-0.png
+-0.65 - 00018251 - ENTRY - 36 ../TestDir/test_link/cloud-mountains-forground.png
+-0.57 - 00018251 - ENTRY - 88 ../TestDir/test_link/bridgecloud-dark.png
+-0.50 - 00018251 - ENTRY - 4 ../TestDir/test_link/broken.png
+-0.44 - 00018251 - ENTRY - 424 ../TestDir/test_link/cloud-mountains-bottom.png
+-0.38 - 00018251 - ENTRY - 244 ../TestDir/test_link/arctis2.png
+-0.31 - 00018251 - ENTRY - 8 ../TestDir/test_link/burning-3.png
+-0.25 - 00018251 - ENTRY - 8 ../TestDir/test_link/arctis_top.jpg
+-0.18 - 00018251 - ENTRY - 44 ../TestDir/test_link/castle_foreground.png
+-0.12 - 00018251 - ENTRY - 4 ../TestDir/test_link/coin-5.xpm
+-0.03 - 00018251 - ENTRY - 104604 ../TestDir/test_link/code-ANTIGO.zip
+0.03 - 00018251 - ENTRY - 12 ../TestDir/test_link/coin-1.png
+0.10 - 00018251 - ENTRY - 88 ../TestDir/test_link/bluemountain-bottom.png
+0.17 - 00018251 - ENTRY - 116 ../TestDir/test_link/arcticskies35.png
+0.23 - 00018251 - ENTRY - 8 ../TestDir/test_link/air_display.png
+0.30 - 00018251 - ENTRY - 20 ../TestDir/test_link/billboard-backflip.png
+0.36 - 00018251 - ENTRY - 8 ../TestDir/test_link/burning-4.png
+0.42 - 00018251 - ENTRY - 176 ../TestDir/test_link/block-snow-midground.png
+0.49 - 00018251 - ENTRY - 172 ../TestDir/test_link/bluemountain2.png
+0.55 - 00018251 - ENTRY - 4 ../TestDir/test_link/az.po
+0.61 - 00018251 - ENTRY - 4 ../TestDir/test_link/bark-0.png
+0.68 - 00018251 - ENTRY - 40 ../TestDir/test_link/billboard-climbing.png
+0.74 - 00018251 - ENTRY - 316 ../TestDir/test_link/arctis_bottom_para3.png
+-1.67 - 00018257 - CREATE - Command: ../TestDir/test_link/code/tux_backwards/code/img_files/tux_backwards/test/-l  -a --block-size=1024 -L --max_depth=-6
+-1.49 - 00018257 - SEND_PIPE - Command: 596
+-1.47 - 00018257 - EXIT - 0
+-1.23 - 00018256 - RECV_PIPE - Command: 596
+-1.02 - 00018256 - CREATE - Command: ../TestDir/test_link/code/tux_backwards/code/img_files/tux_backwards/-l  -a --block-size=1024 -L --max_depth=-5
+-0.95 - 00018256 - SEND_PIPE - Command: 720
+-0.91 - 00018256 - EXIT - 0
+-0.65 - 00018255 - RECV_PIPE - Command: 720
+-0.39 - 00018255 - CREATE - Command: ../TestDir/test_link/code/tux_backwards/code/img_files/-l  -a --block-size=1024 -L --max_depth=-4
+-0.32 - 00018255 - SEND_PIPE - Command: 7552
+-0.29 - 00018255 - EXIT - 0
+-1.59 - 00018254 - RECV_PIPE - Command: 7552
+-1.27 - 00018254 - CREATE - Command: ../TestDir/test_link/code/tux_backwards/code/-l  -a --block-size=1024 -L --max_depth=-3
+-1.18 - 00018254 - SEND_PIPE - Command: 22660
+-1.15 - 00018254 - EXIT - 0
+-1.36 - 00018253 - RECV_PIPE - Command: 22660
+-1.19 - 00018253 - CREATE - Command: ../TestDir/test_link/code/tux_backwards/-l  -a --block-size=1024 -L --max_depth=-2
+-1.13 - 00018253 - SEND_PIPE - Command: 22764
+-1.11 - 00018253 - EXIT - 0
+-1.08 - 00018252 - RECV_PIPE - Command: 22764
+-0.76 - 00018252 - ENTRY - 33864 ../TestDir/test_link/code/
+-0.65 - 00018252 - CREATE - Command: ../TestDir/test_link/code-l  -a --block-size=1024 -L --max_depth=-1
+-0.58 - 00018252 - SEND_PIPE - Command: 33864
+-0.56 - 00018252 - EXIT - 0
+1.13 - 00018251 - RECV_PIPE - Command: 33864
+1.24 - 00018251 - ENTRY - 12 ../TestDir/test_link/cloud.png
+1.40 - 00018251 - ENTRY - 12 ../TestDir/test_link/coin-4.png
+1.50 - 00018251 - ENTRY - 4 ../TestDir/test_link/coin-0.xpm
+1.59 - 00018251 - ENTRY - 4 ../TestDir/test_link/burning-9.png
+1.68 - 00018251 - ENTRY - 1192 ../TestDir/test_link/arcticskies1.png
+1.75 - 00018251 - ENTRY - 12 ../TestDir/test_link/coin-7.png
+1.81 - 00018251 - ENTRY - 4 ../TestDir/test_link/coin-2.xpm
+1.87 - 00018251 - ENTRY - 4 ../TestDir/test_link/ambient_light.png
+1.93 - 00018251 - ENTRY - 8 ../TestDir/test_link/buttjump-5.png
+2.00 - 00018251 - ENTRY - 68 ../TestDir/test_link/bridgecloud-light.png
+2.06 - 00018251 - ENTRY - 8 ../TestDir/test_link/backflip.png
+2.12 - 00018251 - ENTRY - 8 ../TestDir/test_link/buttjump-1.png
+2.19 - 00018251 - ENTRY - 52 ../TestDir/test_link/billboard-resetpoint.png
+2.30 - 00018251 - ENTRY - 8 ../TestDir/test_link/buttjump-6.png
+2.38 - 00018251 - ENTRY - 28 ../TestDir/test_link/billboard-trampoline.png
+2.46 - 00018251 - ENTRY - 232 ../TestDir/test_link/bluemountain-middle.png
+2.54 - 00018251 - ENTRY - 4 ../TestDir/test_link/andale10.stf
+2.60 - 00018251 - ENTRY - 12 ../TestDir/test_link/cave2.jpg
+2.67 - 00018251 - ENTRY - 4 ../TestDir/test_link/clouds.png
+2.73 - 00018251 - ENTRY - 412 ../TestDir/test_link/block-snow-top.png
+2.79 - 00018251 - ENTRY - 108 ../TestDir/test_link/arctis_bottom.jpg
+2.85 - 00018251 - ENTRY - 4 ../TestDir/test_link/coins.h
+2.91 - 00018251 - ENTRY - 8 ../TestDir/test_link/burning-2.png
+2.98 - 00018251 - ENTRY - 128 ../TestDir/test_link/arcticskies2.png
+3.04 - 00018251 - ENTRY - 448 ../TestDir/test_link/arctis_para3.png
+3.10 - 00018251 - ENTRY - 8 ../TestDir/test_link/burning-5.png
+3.16 - 00018251 - ENTRY - 8 ../TestDir/test_link/buttjump-3.png
+3.22 - 00018251 - ENTRY - 88 ../TestDir/test_link/arctis.jpg
+3.29 - 00018251 - ENTRY - 4 ../TestDir/test_link/coin-4.xpm
+3.36 - 00018251 - ENTRY - 40 ../TestDir/test_link/bridgeocean-original.png
+3.42 - 00018251 - ENTRY - 28 ../TestDir/test_link/billboard-pickrock.png
+3.49 - 00018251 - ENTRY - 40 ../TestDir/test_link/billboard-bigtux.png
+3.55 - 00018251 - ENTRY - 8 ../TestDir/test_link/air.png
+3.62 - 00018251 - ENTRY - 4 ../TestDir/test_link/coin-6.xpm
+3.68 - 00018251 - ENTRY - 92 ../TestDir/test_link/bridgeocean-nofade.png
+3.75 - 00018251 - ENTRY - 8 ../TestDir/test_link/burning-7.png
+3.81 - 00018251 - ENTRY - 4 ../TestDir/test_link/climbable.png
+3.87 - 00018251 - ENTRY - 148 ../TestDir/test_link/arctis_para2.png
+3.93 - 00018251 - ENTRY - 8 ../TestDir/test_link/buttjump-4.png
+4.00 - 00018251 - ENTRY - 40 ../TestDir/test_link/billboard-fireflower.png
+4.06 - 00018251 - ENTRY - 4 ../TestDir/test_link/ambientsound.png
+4.12 - 00018251 - ENTRY - 4 ../TestDir/test_link/black_800px.png
+4.18 - 00018251 - ENTRY - 8 ../TestDir/test_link/burning-6.png
+4.24 - 00018251 - ENTRY - 1120 ../TestDir/test_link/cloud-mountains-background.png
+4.34 - 00018251 - ENTRY - 16 ../TestDir/test_link/bluemountain-top.png
+4.41 - 00018251 - ENTRY - 4 ../TestDir/test_link/center.png
+4.47 - 00018251 - ENTRY - 8 ../TestDir/test_link/coin-7.xpm
+4.53 - 00018251 - ENTRY - 40 ../TestDir/test_link/arctis_dark.jpg
+4.59 - 00018251 - ENTRY - 12 ../TestDir/test_link/coin-6.png
+4.65 - 00018251 - ENTRY - 4 ../TestDir/test_link/bicycleplatform.png
+4.72 - 00018251 - ENTRY - 48 ../TestDir/test_link/billboard-buttjump.png
+4.78 - 00018251 - ENTRY - 4 ../TestDir/test_link/charging-0.png
+4.90 - 00018251 - ENTRY - 4 ../TestDir/test_link/background.png
+4.97 - 00018251 - ENTRY - 692 ../TestDir/test_link/block-snow-background.png
+5.03 - 00018251 - ENTRY - 4 ../TestDir/test_link/clock.png
+5.10 - 00018251 - ENTRY - 4 ../TestDir/test_link/camera.png
+5.16 - 00018251 - ENTRY - 80 ../TestDir/test_link/bridgeocean-fade.png
+5.22 - 00018251 - ENTRY - 88 ../TestDir/test_link/arcticskies4.png
+5.28 - 00018251 - ENTRY - 4 ../TestDir/test_link/coins.c
+5.35 - 00018251 - ENTRY - 128 ../TestDir/test_link/arcticskies3.png
+5.40 - 00018251 - ENTRY - 12 ../TestDir/test_link/coin-3.png
+5.46 - 00018251 - ENTRY - 12 ../TestDir/test_link/coin-5.png
+5.52 - 00018251 - ENTRY - 12 ../TestDir/test_link/coin-0.png
+-1.60 - 00018261 - ENTRY - 104 ../TestDir/test_link/tux_backwards/
+-1.32 - 00018261 - CREATE - Command: ../TestDir/test_link/tux_backwards-l  -a --block-size=1024 -L --max_depth=-1
+-1.26 - 00018261 - SEND_PIPE - Command: 104
+-1.23 - 00018261 - EXIT - 0
+5.95 - 00018251 - RECV_PIPE - Command: 104
+6.09 - 00018251 - ENTRY - 4 ../TestDir/test_link/charging-1.png
+6.20 - 00018251 - ENTRY - 4 ../TestDir/test_link/burning-8.png
+6.31 - 00018251 - ENTRY - 8 ../TestDir/test_link/burning-1.png
+6.40 - 00018251 - ENTRY - 4 ../TestDir/test_link/candle-4.png
+6.49 - 00018251 - ENTRY - 68 ../TestDir/test_link/billboard-plant.png
+6.57 - 00018251 - ENTRY - 8 ../TestDir/test_link/buttjump-2.png
+6.85 - 00018251 - ENTRY - 146632 ../TestDir/test_link/
+6.94 - 00018251 - CREATE - Command: ../TestDir/test_link-l  -a --block-size=1024 -L --max_depth=0
+3.52 - 00018228 - RECV_PIPE - Command: 146632
+3.59 - 00018228 - ENTRY - 496 ../TestDir/menus1.bmp
+3.70 - 00018228 - ENTRY - 942961424 ../TestDir/
+3.79 - 00018228 - EXIT - 0
+7.03 - 00018251 - SEND_PIPE - Command: 146632
+7.08 - 00018251 - EXIT - 0

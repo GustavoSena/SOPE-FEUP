@@ -19,8 +19,7 @@ void createReg(Reg * reg,char *action){
     reg->time=((double)(clock()-beginTime))/(CLOCKS_PER_SEC/(double)1000.0);
     reg->pid=getpid();
     strcpy(reg->action, action);
-    //reg->action=action;
-    strncpy(reg->info,"Command: ", sizeof("Command: "));
+    strcpy(reg->info,"Command: ");
 }
 
 void writeReg(Reg * reg){
@@ -47,17 +46,17 @@ void logExit(int status) {
     exit(status);
 }
 
-void logRecvSig(int sig) {
+void logRecvSig(char * sig) {
     Reg reg; 
     createReg(&reg, "RECV_SIGNAL");
-    sprintf(reg.info, "%d", sig);
+    sprintf(reg.info, "%s", sig);
     writeReg(&reg);
 }
 
-void logSendSig(pid_t pid,int sig) {
+void logSendSig(pid_t pid,char *sig) {
     Reg reg; 
     createReg(&reg, "SEND_SIGNAL");
-    sprintf(reg.info, "Sent %d to process %d", sig, pid);
+    sprintf(reg.info, "Sent %s to process %d", sig, pid);
     writeReg(&reg);
 }
 
@@ -93,4 +92,9 @@ void logEntry(int size, char* path) {
     writeReg(&reg);
 }
 
+	strcat(reg.info, new_path);
+    strcat(reg.info, "-l ");
+	strcat(reg.info, argline(arg));
+	writeReg(&reg);
+}
 
