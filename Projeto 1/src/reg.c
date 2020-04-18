@@ -77,6 +77,13 @@ void logSendPipe(char* message) {
     writeReg(&reg);
 }
 
+void logEntry(int size, char* path) {
+    Reg reg; 
+    createReg(&reg, "ENTRY");
+    sprintf(reg.info, "%d %s", size, path);
+
+    writeReg(&reg);
+}
 
 void logEntry(int size, char* path) {
     Reg reg; 

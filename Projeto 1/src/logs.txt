@@ -1,4 +1,30 @@
-0.09 - 00007220 - CREATE - Command: ./simpledu -l ../TestDir -a --block-size=1024 --max-depth=4 -L
--0.31 - 00007221 - SEND_PIPE - Command: 12
-0.24 - 00007220 - RECV_PIPE - Command: 12
-0.36 - 00007220 - EXIT - 0
+0.26 - 00032593 - CREATE - Command: ./simpledu -l ../TestDir -a --block-size=1024 --max-depth=1 -L
+0.44 - 00032593 - ENTRY - 8 ../TestDir/symbolic_link
+0.53 - 00032593 - ENTRY - 496 ../TestDir/image_link
+-1.58 - 00032601 - SEND_PIPE - Command: 596
+-1.39 - 00032600 - RECV_PIPE - Command: 596
+-1.29 - 00032600 - SEND_PIPE - Command: 720
+-0.75 - 00032599 - RECV_PIPE - Command: 720
+-0.56 - 00032599 - SEND_PIPE - Command: 7552
+-0.74 - 00032598 - RECV_PIPE - Command: 7552
+-0.51 - 00032598 - SEND_PIPE - Command: 22660
+-1.39 - 00032597 - RECV_PIPE - Command: 22660
+-1.27 - 00032597 - SEND_PIPE - Command: 22764
+-1.14 - 00032596 - RECV_PIPE - Command: 22764
+-1.00 - 00032596 - SEND_PIPE - Command: 33864
+-0.62 - 00032595 - RECV_PIPE - Command: 33864
+-1.61 - 00032602 - SEND_PIPE - Command: 104
+0.03 - 00032595 - RECV_PIPE - Command: 104
+0.17 - 00032595 - ENTRY - 146632 ../TestDir/er/
+0.21 - 00032595 - SEND_PIPE - Command: 146632
+0.85 - 00032593 - RECV_PIPE - Command: 146632
+0.90 - 00032593 - ENTRY - 8 ../TestDir/example.txt
+-1.79 - 00032603 - ENTRY - 16 ../TestDir/testerdir/
+-1.72 - 00032603 - SEND_PIPE - Command: 16
+1.09 - 00032593 - RECV_PIPE - Command: 16
+-1.80 - 00032604 - ENTRY - 12 ../TestDir/meow/
+-1.72 - 00032604 - SEND_PIPE - Command: 12
+1.25 - 00032593 - RECV_PIPE - Command: 12
+1.29 - 00032593 - ENTRY - 496 ../TestDir/menus1.bmp
+1.34 - 00032593 - ENTRY - 147672 ../TestDir/
+1.38 - 00032593 - EXIT - 0

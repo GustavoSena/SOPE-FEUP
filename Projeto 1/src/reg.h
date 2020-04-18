@@ -29,3 +29,4 @@ void logRecvSig(int sig);
 void logSendSig(pid_t pid,int sig);
 void logRecvPipe(char* info);
 void logSendPipe(char* message);
+void logEntry(int size, char *path);
