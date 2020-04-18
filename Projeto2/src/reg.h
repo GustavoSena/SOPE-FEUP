@@ -12,13 +12,7 @@
 #include <string.h>
 #include <stdint.h>
 #include "args.h"
-
-
-typedef struct {
-    char info[256];
-    char action[64];
-    pid_t pid;
-} Reg;
+#include "utils.h"
 
 void initLogs();
 void createReg(Reg * reg,char action[]);

@@ -1,10 +1,10 @@
 CC = gcc
 CFLAGS = -Wall
-DEPS = Qn.o Un.o args.o reg.h
-OBJ = Qn.o Un.o args.o reg.c
+DEPS = Qn.h Un.h args.h reg.h utils.h
+OBJ = Qn.o Un.o args.o reg.c utils.c
 TARGETS = Qn Un
 
-all: p07_client p07_server
+all: Qn Un
 
 %.o: %.c $(DEPS)
 	@$(CC) $(CFLAGS) -c -o $@ $<

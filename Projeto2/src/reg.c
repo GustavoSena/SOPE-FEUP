@@ -13,29 +13,13 @@ void initLogs(){
     }
 }
 
-
-void createReg(Reg * reg,char *action){
-    
-
-    reg->pid=getpid();
-    strcpy(reg->action, action);
-    strcpy(reg->info,"Command: ");
-}
-
-void writeReg(Reg * reg){
+void writeReg(Request rq, char* order){
     fprintf(logs,"%.2f - %.8d - %s - %s\n", time(), reg->pid, reg->action, reg->info);
     setbuf(logs, NULL); //limpar o buffer
 }
 
-void logCreate(int argc, char *args[]) {
-    Reg reg; 
-    createReg(&reg, "CREATE");
-    for(int i = 0; i < argc; i++){
-		strcat(reg.info, args[i]);
-        if (i != argc-1)
-            strcat(reg.info," ");
-	}
-    writeReg(&reg);
+void logWant(Request rq) {
+    writeReg(rq,);
 }
 
 void logExit(int status) {
