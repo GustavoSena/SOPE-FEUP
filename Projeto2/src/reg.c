@@ -14,14 +14,50 @@ void initLogs(){
 }
 
 void writeReg(Request rq, char* order){
-    fprintf(logs,"%.2f - %.8d - %s - %s\n", time(), reg->pid, reg->action, reg->info);
+    fprintf(logs,"%.8d ; %.4d ; %.6d ; %.6d ; %.6d ; %.4d ;%s\n", time(), rq.i, rq.pid ,rq.tid , rq.dur, rq.pl, order);
     setbuf(logs, NULL); //limpar o buffer
 }
 
 void logWant(Request rq) {
-    writeReg(rq,);
+    writeReg(rq,"IWANT");
 }
 
+void logRecv(Request rq) {
+    writeReg(rq,"RECVD");
+}
+
+void logEnter(Request rq) {
+    writeReg(rq,"ENTER");
+}
+
+void logIamIn(Request rq) {
+    writeReg(rq,"IAMIN");
+}
+
+void logTimeUp(Request rq) {
+    writeReg(rq,"TIMEUP");
+}
+
+void log2Late(Request rq) {
+    writeReg(rq,"2LATE");
+}
+
+void logClosed(Request rq) {
+    writeReg(rq,"CLOSD");
+}
+
+void logFailed(Request rq) {
+    writeReg(rq,"FAILD");
+}   
+
+void logGaveUp(Request rq) {
+    writeReg(rq,"GAVUP");
+}
+
+
+
+
+/*
 void logExit(int status) {
     Reg reg; 
     createReg(&reg, "EXIT");
@@ -30,7 +66,7 @@ void logExit(int status) {
     exit(status);
 }
 
-void logRecvSig(char * sig) {
+void logRecv(char * sig) {
     Reg reg; 
     createReg(&reg, "RECV_SIGNAL");
     sprintf(reg.info, "%s", sig);
@@ -82,3 +118,4 @@ void logEntry(int size, char* path) {
 	writeReg(&reg);
 }
 
+*/
