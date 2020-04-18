@@ -7,9 +7,16 @@
 #include <sys/wait.h>
 #include <ctype.h>
 #include <pthread.h>
-#include "args.h"
 
-int main(int argc char *argv )
-{
 
-}
+typedef struct {
+
+    int i;
+    int pid;
+    int tid;
+    int dur; //milissegundos
+    int pl;
+
+}Request;
+
+
