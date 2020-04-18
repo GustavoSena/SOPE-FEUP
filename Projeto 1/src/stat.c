@@ -86,10 +86,18 @@ int  getDirectoryInfo(char * pathname, int max_depth, Args arg)
     sleep(1);
     int sum=0;
 
-    pid_t pid;
-
-    DIR * newDir = opendir(pathname); //apontador para os conteudos da pasta
-    struct dirent *dp;
+    /*if (max_depth == 0){
+        sum=callRightFunction(pathname,arg);
+        printResult(sum,pathname);
+        return sum;
+    }
+    else
+    {*/
+        
+        pid_t pid;
+        //callRightFunction(pathname, arg);
+        DIR * newDir = opendir(pathname); //apontador para os conteudos da pasta
+        struct dirent *dp;
        
     char **new_files = malloc(400*sizeof(char*));
         

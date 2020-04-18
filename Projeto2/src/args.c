@@ -12,8 +12,25 @@ Args_qn process_args(int argc, char *argv[]){
 	
 	
     for (int i = 1; i < argc; i++) {
-       
-        if (strcmp(argv[i], "-l") == 0) {
+        
+		if (strcmp(argv[i], "-a") == 0 ||strcmp(argv[i], "--all")==0) {
+			args.all=1;
+			
+		}
+		
+		else if (strcmp(argv[i], "-b") == 0||strcmp(argv[i], "--bytes")==0) {
+			args.bytes= 1;
+			
+		}
+		else if (strcmp(argv[i], "-L") == 0||strcmp(argv[i], "--dereference") == 0) {
+			args.dereference=1;
+			
+			
+		}
+        
+		else if (strcmp(argv[i], "-l") == 0) { continue; }
+		
+		else if (strcmp(argv[i], "-B") == 0) {
 			if(i<argc-1){
 				i++;
 				int size=atoi(argv[i]);

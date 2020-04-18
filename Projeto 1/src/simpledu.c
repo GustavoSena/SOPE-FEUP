@@ -53,8 +53,9 @@ int main(int argc, char *argv[], char *envp[])
 	Args args = process_args(argc,argv);
     setBlockSize(args.block_size);
     int total; 
+    initLogs();
     
-    logCreate(argc,argv);
+logCreate(argc,argv);
     if(isDirectory(args.path)){
         total = getDirectoryInfo(args.path, args.max_depth, args);
     }
@@ -64,6 +65,6 @@ int main(int argc, char *argv[], char *envp[])
     }
     logExit(0);
     
-
+    return 0;
 
 }
