@@ -20,3 +20,4 @@ typedef struct {
 }Request;
 
 
+char * fifo_name(int pid, int tid);
