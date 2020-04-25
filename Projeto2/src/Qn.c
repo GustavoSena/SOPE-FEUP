@@ -49,5 +49,6 @@ int main(int argc, char *argv[])
     current_time = 0;
     mkfifo(public_fifo, 0660);
     fd1 = open(public_fifo, 0660);
+    Args_qn args=process_args_qn(argc,argv);
     //não esquecer de fazer close do fd1 no final e unlink do public_fifo
 }

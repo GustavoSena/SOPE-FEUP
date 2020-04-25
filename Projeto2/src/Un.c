@@ -47,5 +47,7 @@ int main(int argc, char *argv[])
 {
 
     int i = 1;
+    Args_un args=process_args_un(argc,argv);
+    return 0;
 
 }
