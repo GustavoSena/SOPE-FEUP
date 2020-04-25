@@ -15,16 +15,17 @@ int current_time;
 int max_time;
 int order;
 
-void * dealRequest(void * arg) //o argumento vai ser a order
-{
+void * dealRequest(void * arg) {
     int fd;
     Request request = *(Request *) arg;
-    char * private_fifo = fifo_name(request.pid, request.tid);
+    char private_fifo[50];
+    fifo_name(request.pid, request.tid, private_fifo);
     request.pid = getpid();
     request.tid = pthread_self();
     if (current_time < max_time)
     {
-        request.pl = order++;
+        order++;
+        request.pl = order;
         current_time += request.dur;
         usleep(request.dur * 1000);
     }
@@ -42,7 +43,7 @@ void * dealRequest(void * arg) //o argumento vai ser a order
 
 int main(int argc, char *argv[])
 {
-    Args_qn arg = process_args(argc, argv);
+    Args_qn arg = process_args_qn(argc, argv);
     max_time = arg.nsecs;
     strcpy(public_fifo, arg.fifoname);
     int fd1;

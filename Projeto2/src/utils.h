@@ -13,11 +13,11 @@ typedef struct {
 
     int i;
     int pid;
-    int tid;
+    long tid;
     int dur; //milissegundos
     int pl;
 
 }Request;
 
 
-char * fifo_name(int pid, int tid);
+void fifo_name(int pid,long tid, char * f_name);
