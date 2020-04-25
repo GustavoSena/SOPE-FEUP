@@ -18,12 +18,14 @@ int order;
 void * dealRequest(void * arg) {
     int fd;
     Request request = *(Request *) arg;
-    char * private_fifo = fifo_name(request.pid, request.tid);
+    char private_fifo[50];
+    fifo_name(request.pid, request.tid, private_fifo);
     request.pid = getpid();
     request.tid = pthread_self();
     if (current_time < max_time)
     {
-        request.pl = order++;
+        order++;
+        request.pl = order;
         current_time += request.dur;
         usleep(request.dur * 1000);
     }
