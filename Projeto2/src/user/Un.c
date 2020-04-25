@@ -8,8 +8,8 @@
 #include <sys/wait.h>
 #include <ctype.h>
 #include <pthread.h>
-#include "args.h"
-#include "utils.h"
+#include "../args.h"
+#include "../utils.h"
 
 char public_fifo[20];
 int fd;

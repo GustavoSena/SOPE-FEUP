@@ -6,7 +6,7 @@
 
 
 void writeReg(Request rq, char* order){
-    fprintf(stdout,"%.8d ; %.4d ; %.6d ; %.6d ; %.6d ; %.4d ;%s\n", time(NULL), rq.i, rq.pid ,rq.tid , rq.dur, rq.pl, order);
+    fprintf(stdout,"%.10ld ; %.4d ; %.6d ; %.6d ; %.6d ; %.4d ;%s\n", time(NULL), rq.i, rq.pid ,rq.tid , rq.dur, rq.pl, order);
     fflush(stdout);
 }
 
