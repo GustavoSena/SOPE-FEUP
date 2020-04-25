@@ -15,8 +15,7 @@ int current_time;
 int max_time;
 int order;
 
-void * dealRequest(void * arg) //o argumento vai ser a order
-{
+void * dealRequest(void * arg) {
     int fd;
     Request request = *(Request *) arg;
     char * private_fifo = fifo_name(request.pid, request.tid);
