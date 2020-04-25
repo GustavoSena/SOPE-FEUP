@@ -19,7 +19,7 @@
 
 
 
-void initLogs();
+
 void writeReg(Request rq, char* order);
 void logWant(Request rq);
 void logRecv(Request rq);
@@ -30,6 +30,7 @@ void log2Late(Request rq);
 void logClosed(Request rq);
 void logFailed(Request rq);
 void logGaveUp(Request rq);
+<<<<<<< HEAD
 /*
 void createReg(Reg * reg,char action[]);
 
@@ -43,3 +44,5 @@ void logEntry(int size, char *path);
 void logCreateFork(Args arg, int max_depth, char *new_path);
 
 */
+=======
+>>>>>>> d74506d053ca3c37c71f8b30b6c9cb4703c622c1

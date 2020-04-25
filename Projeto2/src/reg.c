@@ -1,21 +1,13 @@
 #include "reg.h"
 
 
-FILE *logs;
 
-void initLogs(){
 
-    setenv("LOG_FILENAME","logs.txt",0);
 
-    if((logs = fopen(getenv("LOG_FILENAME"),"w"))==NULL){
-        perror("Unable to open file");
-        exit(1);
-    }
-}
 
 void writeReg(Request rq, char* order){
-    fprintf(logs,"%.8d ; %.4d ; %.6d ; %.6d ; %.6d ; %.4d ;%s\n", time(), rq.i, rq.pid ,rq.tid , rq.dur, rq.pl, order);
-    setbuf(logs, NULL); //limpar o buffer
+    fprintf(stdout,"%.8d ; %.4d ; %.6d ; %.6d ; %.6d ; %.4d ;%s\n", time(NULL), rq.i, rq.pid ,rq.tid , rq.dur, rq.pl, order);
+    fflush(stdout);
 }
 
 void logWant(Request rq) {

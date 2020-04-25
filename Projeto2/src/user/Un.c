@@ -28,7 +28,8 @@ void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
 
     write(fd, &request, sizeof(request));
 
-    char *fifo = fifo_name(request.pid, request.tid);
+    char fifo[50];
+    fifo_name(request.pid, request.tid, fifo);
     mkfifo(fifo, 0660);
 
     fd2 = open(fifo, O_RDONLY);
