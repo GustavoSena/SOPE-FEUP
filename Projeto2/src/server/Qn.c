@@ -43,7 +43,7 @@ void * dealRequest(void * arg) {
 
 int main(int argc, char *argv[])
 {
-    Args_qn arg = process_args(argc, argv);
+    Args_qn arg = process_args_qn(argc, argv);
     max_time = arg.nsecs;
     strcpy(public_fifo, arg.fifoname);
     int fd1;
