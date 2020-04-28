@@ -28,20 +28,29 @@ void * dealRequest(void * arg) {
     request.pid = getpid();
     request.tid = pthread_self();
 
-    if (current_time < max_time)
+    if (current_time < max_time) //aceitou o pedido
     {
+        
         order++;
         request.pl = order;
-        current_time += request.dur;
-        usleep(request.dur * 1000);
+        current_time += request.dur/1000;
+        logEnter(request);
+        //usleep(request.dur * 1000);
     }
+    else
+    {
+        log2Late(request);
+    }
+    
 
     do
     {
         fd = open(private_fifo, O_WRONLY);
     } while (fd == -1);
 
+    
     write(fd, &request, sizeof(request));
+    printf("Wrote answer\n");
     close(fd);
     
     return NULL;
@@ -69,22 +78,38 @@ int main(int argc, char *argv[])
     fd1 = open(public_fifo, O_RDONLY | O_NONBLOCK);
     printf("%d\n", fd1);
     printf("opened fifo\n");
+    pthread_t tid;
     do
     {
         if(read(fd1, &request, sizeof(request))>0)
         { 
-            pthread_t tid;
+            
             pthread_create(&tid, NULL, dealRequest, (void *)&request);
-            //pthread_join(tid, NULL); //acho q n devemos fazer isto
+            pthread_join(tid, NULL); //acho q n devemos fazer isto
+            printf("%d\n", current_time);
+            printf("%d\n", max_time);
         } 
+   
         
     } while (current_time < max_time);
+
+    printf("Out of first cycle\n");
+
+    usleep(5*1000000);
+
+    while(read(fd1, &request, sizeof(request))>0) //limpar o resto dos pedidos
+    {
+       
+        printf("In second cycle\n");
+        pthread_create(&tid, NULL, dealRequest, (void *)&request);
+    }
     
 
-    logWant(request);
+    
     close(fd1);
     unlink(public_fifo);
 
-    pthread_exit(0);
-   
+    printf("finish program\n");
+    //pthread_exit(0);
+   return 0;
 }

@@ -18,6 +18,7 @@ int fd;
 
 void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
 {
+    printf("Entered thread\n");
     int fd2;
     time_t t;
     srand((unsigned) time(&t));
@@ -26,22 +27,44 @@ void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
     request.i = *(int *) arg;
     request.tid = pthread_self();
     request.pl = -1;
-    request.dur = (rand() % 410001) + 10000;
+    //request.dur = (rand() % 410001) + 10000;
+    request.dur = 5000; //5 segundos para efeitos de teste
 
 
 	logWant(request);
 
-
-	write(fd, &request, sizeof(request));
+    //O programa termina aqui quando o tempo em qn acaba e não percebo porquê
+    write(fd, &request, sizeof(request)); 
+    printf("%d: sent\n", request.i);
 
 	char fifo[50];
     fifo_name(request.pid, request.tid, fifo);
-    printf("Got private fifo\n");
-    mkfifo(fifo, 0660);
+    int error = mkfifo(fifo, 0660);
+    if(error < 0)
+        printf("Error creating fifo\n");
+    fd2 = open(fifo, O_RDONLY | O_NONBLOCK);
+    if(fd2 < 0)
+        printf("Error opening fifo\n");
 
-    fd2 = open(fifo, O_RDONLY);
+    Request answer;
+    
 
-    //Tratar da parte de dar display da informação
+    int error2;
+    do
+    {
+        error2 = read(fd2, &answer,sizeof(answer));
+    } while (error2 <= 0);
+    
+    
+    if(answer.pl != -1) // se o pedido foi aceite
+    {
+        logIamIn(answer); //Ver se é suposto apresentar a informação do request do cliente ou do servidor
+    }
+    else
+    {
+        logClosed(answer);
+    }
+    
 
     close(fd2);
     unlink(fifo);
@@ -54,31 +77,36 @@ void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
 int main(int argc, char *argv[])
 {
 
-    printf("Entered main\n");
+
     Args_un arg = process_args_un(argc, argv);
-    printf("Processed args\n");
     strcpy(public_fifo, arg.fifoname);
-    printf("%s\n", public_fifo);
+
     
     int i = 1;
     int current_time = 0;
     do{
-        printf("try to open fifo\n");
+        
         fd = open(public_fifo, O_WRONLY);
     } while(fd == -1);
 
-    printf("opened fifo\n");
+    
     while(current_time < arg.nsecs)
     {
         pthread_t tid;
         pthread_create(&tid, NULL, sendRequest, (void *)&i);
+        //pthread_join(tid, NULL);
         i++;
         current_time+=2;
-        usleep(2*1000000);
+        usleep(2*1000000); //2 segundos
+        printf("Current time: %d\n", current_time);
+
     }
+
+    printf("Out of while cycle\n");
 
     close(fd);
 
+    printf("finish program\n");
     pthread_exit(0);
 
 }
