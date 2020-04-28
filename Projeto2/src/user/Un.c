@@ -18,6 +18,7 @@ int fd;
 
 void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
 {
+    printf("Thread created\n");
     int fd2;
     time_t t;
     srand((unsigned) time(&t));
@@ -44,6 +45,7 @@ void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
 
     close(fd2);
     unlink(fifo);
+    return NULL;
 
 }
 
@@ -51,8 +53,11 @@ void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
 int main(int argc, char *argv[])
 {
 
+    printf("entered Un\n");
     Args_un arg = process_args_un(argc, argv);
+    printf("Processed args\n");
     strcpy(public_fifo, arg.fifoname);
+    printf("%s\n", public_fifo);
     
     int i = 1;
     int current_time = 0;
