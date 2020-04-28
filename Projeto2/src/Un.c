@@ -29,7 +29,7 @@ void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
     request.dur = (rand() % 410001) + 10000;
 
 
-	logWant(request);
+	
 
 
 	write(fd, &request, sizeof(request));
@@ -40,10 +40,9 @@ void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
 
     fd2 = open(fifo, O_RDONLY);
 
-    //Tratar da parte de dar display da informação
-
-    close(fd2);
-    unlink(fifo);
+	logWant(request);
+	close(fd2);
+	unlink(fifo);
 
 }
 

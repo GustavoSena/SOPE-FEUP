@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
         pthread_create(&tid, NULL, dealRequest, (void *)&request);
         //pthread_join(tid, NULL); //acho q n devemos fazer isto
     } 
-    logWant(request);
+    
     close(fd1);
     unlink(public_fifo);
 
