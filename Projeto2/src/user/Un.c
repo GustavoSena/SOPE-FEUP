@@ -10,6 +10,8 @@
 #include <pthread.h>
 #include "../args.h"
 #include "../utils.h"
+//#include "../reg.h"
+
 
 char public_fifo[20];
 int fd;
@@ -24,11 +26,15 @@ void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
     request.i = *(int *) arg;
     request.tid = pthread_self();
     request.pl = -1;
-    request.dur = (rand() % 410001) + 10000; 
+    request.dur = (rand() % 410001) + 10000;
 
-    write(fd, &request, sizeof(request));
 
-    char fifo[50];
+	logWant(request);
+
+
+	write(fd, &request, sizeof(request));
+
+	char fifo[50];
     fifo_name(request.pid, request.tid, fifo);
     mkfifo(fifo, 0660);
 

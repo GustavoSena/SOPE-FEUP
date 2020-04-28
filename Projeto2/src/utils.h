@@ -1,3 +1,5 @@
+#pragma once
+
 #include <stdio.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -21,3 +23,4 @@ typedef struct {
 
 
 void fifo_name(int pid,long tid, char * f_name);
+

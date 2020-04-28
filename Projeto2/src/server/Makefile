@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -pthread
-OBJS = Qn.o utils.o reg.o args.o
+OBJS = ../utils.o reg.o ../args.o
 XHDRS = ../utils.h ../reg.h ../args.h
 EXEC = Qn
 
