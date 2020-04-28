@@ -50,7 +50,7 @@ void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
 
 int main(int argc, char *argv[])
 {
-
+    printf("dddd");
     Args_un arg = process_args_un(argc, argv);
     strcpy(public_fifo, arg.fifoname);
     
