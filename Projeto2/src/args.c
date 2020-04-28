@@ -81,7 +81,7 @@ Args_qn process_args_qn(int argc, char *argv[]){
 		
 		
     }
-	if (args.nsecs==0){
+	if (args.nsecs==0|| strcmp(args.fifoname, "")==0){
 		perror("Invalid arguments!\n");
 		print_usage_qn();
 		exit(1);
@@ -139,7 +139,7 @@ Args_un process_args_un(int argc, char *argv[]){
 		
 		
     }
-	if (args.nsecs==0){
+	if (args.nsecs==0 || strcmp(args.fifoname, "")==0){
 		perror("Invalid arguments!\n");
 		print_usage_un();
 		exit(1);
