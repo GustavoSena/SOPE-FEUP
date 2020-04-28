@@ -36,6 +36,7 @@ void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
 
 	char fifo[50];
     fifo_name(request.pid, request.tid, fifo);
+    printf("Got private fifo\n");
     mkfifo(fifo, 0660);
 
     fd2 = open(fifo, O_RDONLY);
@@ -44,21 +45,28 @@ void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
 	close(fd2);
 	unlink(fifo);
 
+    return NULL;
+
 }
 
 
 int main(int argc, char *argv[])
 {
-    
+
+    printf("Entered main\n");
     Args_un arg = process_args_un(argc, argv);
+    printf("Processed args\n");
     strcpy(public_fifo, arg.fifoname);
+    printf("%s\n", public_fifo);
     
     int i = 1;
     int current_time = 0;
     do{
+        printf("try to open fifo\n");
         fd = open(public_fifo, O_WRONLY);
     } while(fd == -1);
 
+    printf("opened fifo\n");
     while(current_time < arg.nsecs)
     {
         pthread_t tid;
