@@ -21,7 +21,6 @@ int order;
 void * dealRequest(void * arg) {
 
    
-    printf("Thread created\n");
     int fd;
     Request request = *(Request *) arg;
     logRecv(request);
@@ -55,13 +54,14 @@ void * dealRequest(void * arg) {
             break;
     } while (fd == -1);
 
-    if(n_tries == 50)
-        logGaveUp(request);
-    else
+    //printf("N tries: %d\n", n_tries);
+    if (n_tries == 50)
     {
-        write(fd, &request, sizeof(request));
-        printf("Wrote answer\n");
+        logGaveUp(request);
     }
+    else write(fd, &request, sizeof(request));
+       
+    
     
     
     close(fd);
@@ -75,7 +75,6 @@ int main(int argc, char *argv[])
     Args_qn arg = process_args_qn(argc, argv);
     max_time = arg.nsecs;
     strcpy(public_fifo, arg.fifoname);
-    printf("%s\n", public_fifo);
     int fd1;
     order = 0;
     current_time = 0;
@@ -88,10 +87,7 @@ int main(int argc, char *argv[])
         if (error < 0)
             unlink(public_fifo);
     }while(error<0);
-    printf("created fifo\n");
     fd1 = open(public_fifo, O_RDONLY | O_NONBLOCK);
-    printf("%d\n", fd1);
-    printf("opened fifo\n");
     pthread_t tid;
     do
     {
@@ -99,22 +95,20 @@ int main(int argc, char *argv[])
         { 
             
             pthread_create(&tid, NULL, dealRequest, (void *)&request);
-            pthread_join(tid, NULL); //acho q n devemos fazer isto
-            printf("%d\n", current_time);
-            printf("%d\n", max_time);
+            pthread_join(tid, NULL); 
+
         } 
    
         
     } while (current_time < max_time);
 
-    printf("Out of first cycle\n");
-
+    
     sleep(5);
 
     while(read(fd1, &request, sizeof(request))>0) //limpar o resto dos pedidos
     {
        
-        printf("In second cycle\n");
+       
         pthread_create(&tid, NULL, dealRequest, (void *)&request);
         pthread_join(tid,NULL);
     }
@@ -124,7 +118,7 @@ int main(int argc, char *argv[])
     close(fd1);
     unlink(public_fifo);
 
-    printf("finish program\n");
+    
     pthread_exit(0);
    
 }

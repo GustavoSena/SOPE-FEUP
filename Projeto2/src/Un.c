@@ -20,7 +20,7 @@ int fd;
 void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
 {
     
-    printf("Entered thread\n");
+
     int fd2;
     time_t t;
     srand((unsigned) time(&t));
@@ -37,7 +37,7 @@ void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
 
     
     write(fd, &request, sizeof(request)); 
-    printf("%d: sent\n", request.i);
+   
 
 	char fifo[50];
     fifo_name(request.pid, request.tid, fifo);
@@ -60,8 +60,10 @@ void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
         n_tries++;
         if(n_tries == 50)
             break;
+        sleep(2);
     } while (error2 <= 0);
 
+    
     if(n_tries == 50)
     {
         logFailed(request);
@@ -105,19 +107,17 @@ int main(int argc, char *argv[])
     {
         pthread_t tid;
         pthread_create(&tid, NULL, sendRequest, (void *)&i);
-        //pthread_join(tid, NULL);
         i++;
         current_time+=2;
         usleep(2*1000000); //2 segundos
-        printf("Current time: %d\n", current_time);
-
+       
     }
 
-    printf("Out of while cycle\n");
+    
 
     close(fd);
 
-    printf("finish program\n");
+    
     pthread_exit(0);
 
 }
