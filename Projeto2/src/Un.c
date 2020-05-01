@@ -15,11 +15,11 @@
 
 char public_fifo[20];
 int fd;
-//pthread_mutex_t mut=PTHREAD_MUTEX_INITIALIZER; 
+
 
 void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
 {
-    //pthread_mutex_lock(&mut);
+    
     printf("Entered thread\n");
     int fd2;
     time_t t;
@@ -35,7 +35,7 @@ void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
 
 	logWant(request);
 
-    //O programa termina aqui quando o tempo em qn acaba e não percebo porquê
+    
     write(fd, &request, sizeof(request)); 
     printf("%d: sent\n", request.i);
 
@@ -47,31 +47,39 @@ void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
     fd2 = open(fifo, O_RDONLY | O_NONBLOCK);
     if(fd2 < 0)
         printf("Error opening fifo\n");
+    
 
     Request answer;
     
 
     int error2;
+    int n_tries = 0;
     do
     {
         error2 = read(fd2, &answer,sizeof(answer));
+        n_tries++;
+        if(n_tries == 50)
+            break;
     } while (error2 <= 0);
-    
-    
-    if(answer.pl != -1) // se o pedido foi aceite
+
+    if(n_tries == 50)
     {
-        logIamIn(answer); //Ver se é suposto apresentar a informação do request do cliente ou do servidor
+        logFailed(request);
     }
     else
     {
-        logClosed(answer);
+        if(answer.pl != -1) // se o pedido foi aceite
+        {
+            logIamIn(answer); //Ver se é suposto apresentar a informação do request do cliente ou do servidor
+        }
+        else
+        {
+            logClosed(answer);
+        }
     }
-    
 
     close(fd2);
     unlink(fifo);
-
-    //pthread_mutex_unlock(&mut);
     return NULL;
 
 }

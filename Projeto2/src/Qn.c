@@ -16,11 +16,11 @@ char public_fifo[30];
 int current_time;
 int max_time;
 int order;
-pthread_mutex_t mut=PTHREAD_MUTEX_INITIALIZER; 
+
 
 void * dealRequest(void * arg) {
 
-    pthread_mutex_lock(&mut);
+   
     printf("Thread created\n");
     int fd;
     Request request = *(Request *) arg;
@@ -46,17 +46,27 @@ void * dealRequest(void * arg) {
     }
     
 
+    int n_tries = 0;
     do
     {
         fd = open(private_fifo, O_WRONLY);
+        n_tries++;
+        if (n_tries == 50)
+            break;
     } while (fd == -1);
 
+    if(n_tries == 50)
+        logGaveUp(request);
+    else
+    {
+        write(fd, &request, sizeof(request));
+        printf("Wrote answer\n");
+    }
     
-    write(fd, &request, sizeof(request));
-    printf("Wrote answer\n");
+    
     close(fd);
     
-    pthread_mutex_unlock(&mut);
+
     return NULL;
 }
 
