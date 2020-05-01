@@ -16,9 +16,11 @@ char public_fifo[30];
 int current_time;
 int max_time;
 int order;
+pthread_mutex_t mut=PTHREAD_MUTEX_INITIALIZER; 
 
 void * dealRequest(void * arg) {
 
+    pthread_mutex_lock(&mut);
     printf("Thread created\n");
     int fd;
     Request request = *(Request *) arg;
@@ -35,7 +37,8 @@ void * dealRequest(void * arg) {
         request.pl = order;
         current_time += request.dur/1000;
         logEnter(request);
-        //usleep(request.dur * 1000);
+        sleep(request.dur/1000);
+        logTimeUp(request);
     }
     else
     {
@@ -53,6 +56,7 @@ void * dealRequest(void * arg) {
     printf("Wrote answer\n");
     close(fd);
     
+    pthread_mutex_unlock(&mut);
     return NULL;
 }
 
@@ -95,13 +99,14 @@ int main(int argc, char *argv[])
 
     printf("Out of first cycle\n");
 
-    usleep(5*1000000);
+    sleep(5);
 
     while(read(fd1, &request, sizeof(request))>0) //limpar o resto dos pedidos
     {
        
         printf("In second cycle\n");
         pthread_create(&tid, NULL, dealRequest, (void *)&request);
+        pthread_join(tid,NULL);
     }
     
 
@@ -110,6 +115,6 @@ int main(int argc, char *argv[])
     unlink(public_fifo);
 
     printf("finish program\n");
-    //pthread_exit(0);
-   return 0;
+    pthread_exit(0);
+   
 }
