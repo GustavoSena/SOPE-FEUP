@@ -15,9 +15,11 @@
 
 char public_fifo[20];
 int fd;
+//pthread_mutex_t mut=PTHREAD_MUTEX_INITIALIZER; 
 
 void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
 {
+    //pthread_mutex_lock(&mut);
     printf("Entered thread\n");
     int fd2;
     time_t t;
@@ -69,6 +71,7 @@ void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
     close(fd2);
     unlink(fifo);
 
+    //pthread_mutex_unlock(&mut);
     return NULL;
 
 }
@@ -82,7 +85,7 @@ int main(int argc, char *argv[])
     strcpy(public_fifo, arg.fifoname);
 
     
-    int i = 1;
+    int i = 0;
     int current_time = 0;
     do{
         

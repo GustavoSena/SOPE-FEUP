@@ -2,7 +2,10 @@
 
 
 void writeReg(Request rq, char* order){
-    fprintf(stdout,"%.10ld ; %.4d ; %.6d ; %.6ld ; %.6d ; %.4d ;%s\n", time(NULL), rq.i, rq.pid ,rq.tid , rq.dur, rq.pl, order);
+    if(rq.pl>=0)
+        fprintf(stdout,"%.10ld ; %.5d ; %.6d ; %.15ld ; %.6d ;  %.5d ; %s\n", time(NULL), rq.i, rq.pid ,rq.tid , rq.dur, rq.pl, order);
+    else
+        fprintf(stdout,"%.10ld ; %.5d ; %.6d ; %.15ld ; %.6d ; %.5d ; %s\n", time(NULL), rq.i, rq.pid ,rq.tid , rq.dur, rq.pl, order);
     fflush(stdout);
 }
 
@@ -15,7 +18,7 @@ void logRecv(Request rq) {
 }
 
 void logEnter(Request rq) {
-    writeReg(rq,"ENTER");
+    writeReg(rq,"ENTER");   
 }
 
 void logIamIn(Request rq) {
