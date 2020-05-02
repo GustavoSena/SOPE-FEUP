@@ -29,8 +29,8 @@ void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
     request.i = *(int *) arg;
     request.tid = pthread_self();
     request.pl = -1;
-    request.dur = (rand() % (1+10000)) + 5000;
-    request.dur = 5000; //5 segundos para efeitos de teste
+    request.dur = (rand() % 10001) + 5000;
+    //request.dur = 5000; //5 segundos para efeitos de teste
 
 
 	
@@ -43,10 +43,10 @@ void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
     fifo_name(request.pid, request.tid, fifo);
     int error = mkfifo(fifo, 0660);
     if(error < 0)
-        printf("Error creating fifo\n");
+        perror("Error creating fifo\n");
     fd2 = open(fifo, O_RDONLY | O_NONBLOCK);
     if(fd2 < 0)
-        printf("Error opening fifo\n");
+        perror("Error opening fifo\n");
     
 
     Request answer;
@@ -64,6 +64,7 @@ void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
     } while (error2 <= 0);
 
     
+
     if(n_tries == 50)
     {
         logFailed(request);

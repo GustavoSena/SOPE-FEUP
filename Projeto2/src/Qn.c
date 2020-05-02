@@ -45,24 +45,34 @@ void * dealRequest(void * arg) {
     }
     
 
-    int n_tries = 0;
+    //int n_tries = 0;
     do
     {
         fd = open(private_fifo, O_WRONLY);
-        n_tries++;
-        if (n_tries == 50)
-            break;
+        // n_tries++;
+        // if (n_tries == 50)
+        //     break;
     } while (fd == -1);
 
     //printf("N tries: %d\n", n_tries);
-    if (n_tries == 50)
-    {
-        logGaveUp(request);
-    }
-    else write(fd, &request, sizeof(request));
+    // if (n_tries == 50)
+    // {
+    //     logGaveUp(request);
+    // }
+    // else write(fd, &request, sizeof(request));
        
-    
-    
+    int error = 0;
+    int n_tries = 0;
+    do{
+        error = write(fd, &request, sizeof(request));
+        n_tries++;
+        if (n_tries == 50)
+            break;
+
+    }while(error <= 0);
+
+    if(n_tries == 50)
+        logGaveUp(request);
     
     close(fd);
     
