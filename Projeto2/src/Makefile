@@ -10,3 +10,5 @@ program1: $(OBJS)
 	$(CC) Qn.c -o Qn $(OBJS) $(CFLAGS)
 program2: $(OBJS)
 	$(CC) Un.c -o Un $(OBJS) $(CFLAGS)
+clean :
+	-rm $(OBJS) $(EXEC)

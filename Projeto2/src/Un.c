@@ -33,7 +33,7 @@ void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
     //request.dur = 5000; //5 segundos para efeitos de teste
 
 
-	logWant(request);
+	
 
     
     write(fd, &request, sizeof(request)); 
@@ -94,7 +94,10 @@ int main(int argc, char *argv[])
 
     Args_un arg = process_args_un(argc, argv);
     strcpy(public_fifo, arg.fifoname);
-
+    if(open(public_fifo, O_WRONLY)<0){
+        perror("Fifo name doesn't match with the server fifo name");
+        exit(1);
+    }
     
     int i = 0;
     int current_time = 0;

@@ -17,7 +17,7 @@ Args_qn process_args_qn(int argc, char *argv[]){
     for (int i = 1; i < argc; i++) {
        
 		
-		if (strcmp(argv[i], "-t") == 0) {
+		if ((strcmp(argv[i], "-t") == 0) && args.nsecs==0) {
 			if(i<argc-1){
 				i++;
 				int size=atoi(argv[i]);
@@ -108,7 +108,7 @@ Args_un process_args_un(int argc, char *argv[]){
     for (int i = 1; i < argc; i++) {
        
 		
-		if (strcmp(argv[i], "-t") == 0) {
+		if (strcmp(argv[i], "-t") == 0&& args.nsecs==0) {
 			if(i<argc-1){
 				i++;
 				int size=atoi(argv[i]);
