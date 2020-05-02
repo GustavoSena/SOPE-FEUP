@@ -113,7 +113,7 @@ int main(int argc, char *argv[])
     } while (current_time < max_time);
 
     
-    sleep(5);
+    //sleep(5);
 
     while(read(fd1, &request, sizeof(request))>0) //limpar o resto dos pedidos
     {
