@@ -20,7 +20,7 @@ int fd;
 void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
 {
     
-    printf("Entered thread\n");
+
     int fd2;
     time_t t;
     srand((unsigned) time(&t));
@@ -29,15 +29,15 @@ void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
     request.i = *(int *) arg;
     request.tid = pthread_self();
     request.pl = -1;
-    request.dur = (rand() % 410001) + 10000;
-    //request.dur = 5000; //5 segundos para efeitos de teste
+    request.dur = (rand() % (1+10000)) + 5000;
+    request.dur = 5000; //5 segundos para efeitos de teste
 
 
 	
 
     
     write(fd, &request, sizeof(request)); 
-    printf("%d: sent\n", request.i);
+   
 
 	char fifo[50];
     fifo_name(request.pid, request.tid, fifo);
@@ -60,8 +60,10 @@ void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
         n_tries++;
         if(n_tries == 50)
             break;
+        sleep(2);
     } while (error2 <= 0);
 
+    
     if(n_tries == 50)
     {
         logFailed(request);
@@ -91,7 +93,10 @@ int main(int argc, char *argv[])
 
     Args_un arg = process_args_un(argc, argv);
     strcpy(public_fifo, arg.fifoname);
-
+    if(open(public_fifo, O_WRONLY)<0){
+        perror("Fifo name doesn't match with the server fifo name");
+        exit(1);
+    }
     
     int i = 0;
     int current_time = 0;
@@ -105,19 +110,17 @@ int main(int argc, char *argv[])
     {
         pthread_t tid;
         pthread_create(&tid, NULL, sendRequest, (void *)&i);
-        //pthread_join(tid, NULL);
         i++;
         current_time+=2;
         usleep(2*1000000); //2 segundos
-        printf("Current time: %d\n", current_time);
-
+       
     }
 
-    printf("Out of while cycle\n");
+    
 
     close(fd);
 
-    printf("finish program\n");
+    
     pthread_exit(0);
 
 }
