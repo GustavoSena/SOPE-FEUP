@@ -7,8 +7,8 @@ OBJS = $(SRCS:.c=.o)
 %.o:%.c
 	$(CC) -c $(CFLAGS) $< -o $@
 program1: $(OBJS)
-	$(CC) Qn.c -o Qn $(OBJS) $(CFLAGS)
+	$(CC) Qn.c -o Q1 $(OBJS) $(CFLAGS)
 program2: $(OBJS)
-	$(CC) Un.c -o Un $(OBJS) $(CFLAGS)
+	$(CC) Un.c -o U1 $(OBJS) $(CFLAGS)
 clean :
 	-rm $(OBJS) $(EXEC)

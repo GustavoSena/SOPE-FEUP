@@ -7,12 +7,14 @@
 #include <sys/wait.h>
 #include <ctype.h>
 #include <pthread.h>
+#include <stdbool.h>
 #include "args.h"
 #include "utils.h"
 #include "reg.h"
 
 
-char public_fifo[30];
+
+
 int current_time;
 int max_time;
 int order;
@@ -45,22 +47,13 @@ void * dealRequest(void * arg) {
     }
     
 
-    //int n_tries = 0;
+    
     do
     {
         fd = open(private_fifo, O_WRONLY);
-        // n_tries++;
-        // if (n_tries == 50)
-        //     break;
+
     } while (fd == -1);
 
-    //printf("N tries: %d\n", n_tries);
-    // if (n_tries == 50)
-    // {
-    //     logGaveUp(request);
-    // }
-    // else write(fd, &request, sizeof(request));
-       
     int error = 0;
     int n_tries = 0;
     do{
@@ -84,6 +77,7 @@ int main(int argc, char *argv[])
 {
     Args_qn arg = process_args_qn(argc, argv);
     max_time = arg.nsecs;
+    char public_fifo[30];
     strcpy(public_fifo, arg.fifoname);
     int fd1;
     order = 0;
@@ -98,22 +92,33 @@ int main(int argc, char *argv[])
             unlink(public_fifo);
     }while(error<0);
     fd1 = open(public_fifo, O_RDONLY | O_NONBLOCK);
+    bool read_smt = false;
+    int n_tries = 0;
     pthread_t tid;
     do
     {
         if(read(fd1, &request, sizeof(request))>0)
         { 
             
+            read_smt = true;
             pthread_create(&tid, NULL, dealRequest, (void *)&request);
             pthread_join(tid, NULL); 
-
+            
         } 
+        n_tries++;
+        if(!read_smt)
+            sleep(1);
+        if(n_tries == 20 && !read_smt)
+        {
+            perror("Client fifo name doesn't match with the server fifo name\n");
+            unlink(public_fifo);
+            exit(1);
+        }
    
         
     } while (current_time < max_time);
 
     
-    //sleep(5);
 
     while(read(fd1, &request, sizeof(request))>0) //limpar o resto dos pedidos
     {

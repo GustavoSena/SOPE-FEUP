@@ -13,7 +13,7 @@
 #include "reg.h"
 
 
-char public_fifo[20];
+
 int fd;
 
 
@@ -30,12 +30,11 @@ void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
     request.tid = pthread_self();
     request.pl = -1;
     request.dur = (rand() % 10001) + 5000;
-    //request.dur = 5000; //5 segundos para efeitos de teste
+    
 
 
 	
-
-    
+    logWant(request);
     write(fd, &request, sizeof(request)); 
    
 
@@ -73,7 +72,7 @@ void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
     {
         if(answer.pl != -1) // se o pedido foi aceite
         {
-            logIamIn(answer); //Ver se é suposto apresentar a informação do request do cliente ou do servidor
+            logIamIn(answer); 
         }
         else
         {
@@ -93,9 +92,11 @@ int main(int argc, char *argv[])
 
 
     Args_un arg = process_args_un(argc, argv);
+    char public_fifo[20];
     strcpy(public_fifo, arg.fifoname);
     if(open(public_fifo, O_WRONLY)<0){
         perror("Fifo name doesn't match with the server fifo name");
+
         exit(1);
     }
     
