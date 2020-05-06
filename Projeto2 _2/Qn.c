@@ -8,10 +8,10 @@
 #include <ctype.h>
 #include <pthread.h>
 #include <stdbool.h>
+#include <signal.h>
 #include "args.h"
 #include "utils.h"
 #include "reg.h"
-
 
 
 
@@ -19,6 +19,16 @@ int current_time;
 int max_time;
 int order;
 
+int flag = 0;
+
+
+
+
+void sigalarm_handler(int signo){
+	flag = 1;
+	printf("Alarm ringing\n");
+
+}
 
 void * dealRequest(void * arg) {
 
@@ -31,14 +41,14 @@ void * dealRequest(void * arg) {
     request.pid = getpid();
     request.tid = pthread_self();
 
-    if (current_time < max_time) //aceitou o pedido
+    if (flag!=1) //aceitou o pedido
     {
         
         order++;
         request.pl = order;
-        current_time += request.dur/1000;
+        current_time += request.dur;
         logEnter(request);
-        sleep(request.dur/1000);
+        usleep(request.dur*1000);
         logTimeUp(request);
     }
     else
@@ -46,13 +56,22 @@ void * dealRequest(void * arg) {
         log2Late(request);
     }
     
-
+    int tries = 0;
     
     do
     {
         fd = open(private_fifo, O_WRONLY);
+        tries++;
+        if (tries == 5)
+            break;
 
     } while (fd == -1);
+
+    if (tries == 5)
+    {
+        printf("Couldn't open private fifo\n");
+        exit(1);
+    }
 
     int error = 0;
     int n_tries = 0;
@@ -75,6 +94,19 @@ void * dealRequest(void * arg) {
 
 int main(int argc, char *argv[])
 {
+
+    struct sigaction act_alarm;
+    act_alarm.sa_handler = sigalarm_handler;
+    sigemptyset(&act_alarm.sa_mask);
+    act_alarm.sa_flags = 0;
+
+    if (sigaction(SIGALRM,&act_alarm,NULL) < 0)  {        
+        fprintf(stderr,"Unable to install SIGALARM handler\n");        
+        exit(1);  
+    }  
+
+
+
     Args_qn arg = process_args_qn(argc, argv);
     max_time = arg.nsecs;
     char public_fifo[30];
@@ -95,8 +127,12 @@ int main(int argc, char *argv[])
     bool read_smt = false;
     int n_tries = 0;
     pthread_t tid;
-    do
-    {
+	
+    alarm(arg.nsecs/1000);
+
+	do
+	{
+        
         if(read(fd1, &request, sizeof(request))>0)
         { 
             
@@ -108,30 +144,34 @@ int main(int argc, char *argv[])
         n_tries++;
         if(!read_smt)
             sleep(1);
+
         if(n_tries == 20 && !read_smt)
         {
             perror("Client fifo name doesn't match with the server fifo name\n");
             unlink(public_fifo);
             exit(1);
         }
-   
-        
-    } while (current_time < max_time);
+  
+     
+    } while (flag!=1);
 
+  
     
+    unlink(public_fifo); //foi mudado de posição
+
+
 
     while(read(fd1, &request, sizeof(request))>0) //limpar o resto dos pedidos
     {
-       
        
         pthread_create(&tid, NULL, dealRequest, (void *)&request);
         pthread_join(tid,NULL);
     }
     
-
+   
     
     close(fd1);
-    unlink(public_fifo);
+    
 
     
     pthread_exit(0);

@@ -12,7 +12,7 @@
 #include "utils.h"
 #include "reg.h"
 
-
+#define WAIT_TIME 10000
 
 int fd;
 
@@ -29,7 +29,7 @@ void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
     request.i = *(int *) arg;
     request.tid = pthread_self();
     request.pl = -1;
-    request.dur = (rand() % 10001) + 5000;
+    request.dur = (rand() % 11) + 5;
     
 
 
@@ -59,7 +59,7 @@ void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
         n_tries++;
         if(n_tries == 50)
             break;
-        sleep(2);
+        usleep(2000000);
     } while (error2 <= 0);
 
     
@@ -113,8 +113,8 @@ int main(int argc, char *argv[])
         pthread_t tid;
         pthread_create(&tid, NULL, sendRequest, (void *)&i);
         i++;
-        current_time+=2;
-        usleep(2*1000000); //2 segundos
+        current_time+=10;
+        usleep(WAIT_TIME); //terá que ser na ordem dos milisse
        
     }
 
