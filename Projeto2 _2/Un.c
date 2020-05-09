@@ -16,6 +16,16 @@
 
 int fd;
 
+static int flagUn = 0;
+
+
+
+
+void sigalrm_handler(int signo){
+	flagUn = 2;
+	printf("Alarm ringing\n");
+
+}
 
 void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
 {
@@ -41,12 +51,16 @@ void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
 	char fifo[50];
     fifo_name(request.pid, request.tid, fifo);
     int error = mkfifo(fifo, 0660);
-    if(error < 0)
+    if(error < 0){
+        printf("Exiting\n");
+
         perror("Error creating fifo\n");
+    }    
     fd2 = open(fifo, O_RDONLY | O_NONBLOCK);
-    if(fd2 < 0)
+    if(fd2 < 0){
+        printf("Exiting\n");
         perror("Error opening fifo\n");
-    
+    }
 
     Request answer;
     
@@ -91,6 +105,17 @@ int main(int argc, char *argv[])
 {
 
 
+    struct sigaction act_alarm;
+    act_alarm.sa_handler = sigalrm_handler;
+    sigemptyset(&act_alarm.sa_mask);
+    act_alarm.sa_flags = 0;
+
+    if (sigaction(SIGALRM,&act_alarm,NULL) < 0)  {        
+        fprintf(stderr,"Unable to install SIGALARM handler\n");        
+        exit(1);  
+    }  
+
+
     Args_un arg = process_args_un(argc, argv);
     char public_fifo[20];
     strcpy(public_fifo, arg.fifoname);
@@ -107,8 +132,9 @@ int main(int argc, char *argv[])
         fd = open(public_fifo, O_WRONLY);
     } while(fd == -1);
 
+    alarm(arg.nsecs/1000);
     
-    while(current_time < arg.nsecs)
+    while(flagUn!=2)
     {
         pthread_t tid;
         pthread_create(&tid, NULL, sendRequest, (void *)&i);
@@ -118,7 +144,7 @@ int main(int argc, char *argv[])
        
     }
 
-    
+    printf("Exited cycle\n");
 
     close(fd);
 

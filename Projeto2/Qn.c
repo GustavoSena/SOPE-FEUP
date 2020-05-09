@@ -14,14 +14,12 @@
 #include "reg.h"
 
 
-pthread_mutex_t mut=PTHREAD_MUTEX_INITIALIZER;
 
 int current_time;
 int max_time;
 int order;
-int occupied_wc;
-int max_wc;
-static int flag = 0;
+
+int flag = 0;
 
 
 
@@ -43,30 +41,21 @@ void * dealRequest(void * arg) {
     request.pid = getpid();
     request.tid = pthread_self();
 
-    while(occupied_wc == max_wc);
-
-    pthread_mutex_lock(&mut);
-
     if (flag!=1) //aceitou o pedido
     {
         
-        
-        occupied_wc++;
         order++;
         request.pl = order;
         current_time += request.dur;
         logEnter(request);
         usleep(request.dur*1000);
         logTimeUp(request);
-        occupied_wc--;
-       
     }
     else
     {
         log2Late(request);
     }
     
-    pthread_mutex_unlock(&mut);
     int tries = 0;
     
     do
@@ -125,8 +114,6 @@ int main(int argc, char *argv[])
     int fd1;
     order = 0;
     current_time = 0;
-    occupied_wc = 0;
-    max_wc = arg.nplaces;
     
     
     Request request;
@@ -143,7 +130,6 @@ int main(int argc, char *argv[])
 	
     alarm(arg.nsecs/1000);
 
-
 	do
 	{
         
@@ -152,7 +138,7 @@ int main(int argc, char *argv[])
             
             read_smt = true;
             pthread_create(&tid, NULL, dealRequest, (void *)&request);
-            //pthread_join(tid, NULL); 
+            pthread_join(tid, NULL); 
             
         } 
         n_tries++;
@@ -179,14 +165,15 @@ int main(int argc, char *argv[])
     {
        
         pthread_create(&tid, NULL, dealRequest, (void *)&request);
-        //pthread_join(tid,NULL);
+        pthread_join(tid,NULL);
     }
     
    
     
     close(fd1);
     
-    pthread_mutex_destroy(&mut);
+
+    
     pthread_exit(0);
    
 }
