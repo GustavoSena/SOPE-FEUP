@@ -22,13 +22,9 @@ int pl = 1; //to figure out
 
 
 
-
-int current_time;
-int max_time;
 int order;
-int occupied_wc;
-int max_wc;
-int max_threads;
+int limit_wc;
+int limit_threads;
 struct Queue* queue;
 sem_t nthreads;
 sem_t nplaces;
@@ -54,25 +50,17 @@ void * dealRequest(void * arg) {
     request.pid = getpid();
     request.tid = pthread_self();
 
-
-
-
-
-    
-  
-
     pthread_mutex_lock(&mut);
 
     if (flag!=1) //aceitou o pedido
     {
-        occupied_wc++;
+     
         order++;
         request.pl = order;
-        current_time += request.dur;
         logEnter(request);
         usleep(request.dur*1000);
         logTimeUp(request);
-        occupied_wc--;
+       
        
     }
     else
@@ -87,30 +75,30 @@ void * dealRequest(void * arg) {
     {
         fd = open(private_fifo, O_WRONLY);
         tries++;
-        if (tries == 5){
+        if (tries == 20){
             printf("Couldn't open private fifo\n");
             exit(1);
 		}
             
-        if (max_threads) { sem_post(&nthreads); }
+        
     } while (fd == -1);
-
+    if (limit_threads) { sem_post(&nthreads); }
 
     int place;
-    if (max_wc) {
+    if (limit_wc) {
         sem_wait(&nplaces);
         pthread_mutex_lock(&mut);
-        place = usePlace(&queue);
+        place = dequeue(queue);
         pthread_mutex_unlock(&mut);
     } else {
         pthread_mutex_lock(&mut);
-        place = queue;
+        place = pl;
         pl++;
         pthread_mutex_unlock(&mut);
     }
 
 
-
+    
 
     int error = 0;
     int n_tries = 0;
@@ -120,11 +108,11 @@ void * dealRequest(void * arg) {
         if (n_tries == 5){
 			logGaveUp(request);
 
-            if (max_threads)
+            if (limit_threads)
             sem_post(&nthreads);
-            if (max_wc) { 
+            if (limit_wc) { 
                 pthread_mutex_lock(&mut);
-                makePlaceAvailable(&queue, place);
+                enqueue(queue, place);
                 pthread_mutex_unlock(&mut);
                 sem_post(&nplaces); 
                 
@@ -136,12 +124,12 @@ void * dealRequest(void * arg) {
 
     close(fd);
     
-    if (max_threads)
+    if (limit_threads)
 		sem_post(&nthreads);
-	if (max_wc)
+	if (limit_wc)
 	{
 		pthread_mutex_lock(&mut);
-        makePlaceAvailable(&queue, place);
+        enqueue(queue, place);
         pthread_mutex_unlock(&mut);
         sem_post(&nplaces);
 	}
@@ -165,15 +153,15 @@ int main(int argc, char *argv[])
 
 
     Args_qn arg = process_args_qn(argc, argv);
-    max_time = arg.nsecs;
     char public_fifo[30];
     strcpy(public_fifo, arg.fifoname);
     int fd1;
     order = 0;
-    current_time = 0;
-    occupied_wc = 0;
-    max_wc = arg.nplaces;
-	max_threads = arg.nthreads;
+   
+    if(arg.nplaces)
+		limit_wc = 1;
+    if(arg.nthreads)
+	    limit_threads = 1;
 	Request request;
 
 	int error;
@@ -185,15 +173,14 @@ int main(int argc, char *argv[])
     }while(error<0);
 
     fd1 = open(public_fifo, O_RDONLY | O_NONBLOCK);
-    bool read_smt = false;
-    int n_tries = 0;
+    
     pthread_t tid;
 	
 
-    if (max_threads) {
+    if (limit_threads) {
         sem_init(&nthreads, 0, arg.nthreads);
     }
-    if (max_wc) {
+    if (limit_wc) {
         sem_init(&nplaces, 0, arg.nplaces);
         queue = createQueue(arg.nplaces);
 		fillQueue(queue);
@@ -202,26 +189,23 @@ int main(int argc, char *argv[])
 	alarm(arg.nsecs/1000);
 
 
+    bool read_smt = false;
+    int n_tries = 0;
 	do
 	{
         
         if(read(fd1, &request, sizeof(request))>0)
         { 
-            
+            if (limit_threads)  
+                sem_wait(&nthreads);
             read_smt = true;
             pthread_create(&tid, NULL, dealRequest, (void *)&request);
             //pthread_join(tid, NULL); 
-            
         } 
         n_tries++;
         if(!read_smt)
             sleep(1);
-
-
-
-        if (max_threads)  
-            sem_wait(&nthreads);
-
+        
         if(n_tries == 20 && !read_smt)
         {
             perror("Client fifo name doesn't match with the server fifo name\n");
@@ -240,7 +224,7 @@ int main(int argc, char *argv[])
 
     while(read(fd1, &request, sizeof(request))>0) //limpar o resto dos pedidos
     {
-        if (max_threads)  
+        if (limit_threads)  
             sem_wait(&nthreads);
 
         pthread_create(&tid, NULL, dealRequest, (void *)&request);

@@ -143,7 +143,7 @@ int main(int argc, char *argv[])
         pthread_create(&tid, NULL, sendRequest, (void *)&i);
         i++;
         current_time+=10;
-        usleep(WAIT_TIME); //terá que ser na ordem dos milisse
+        usleep(WAIT_TIME); //terá que ser na ordem dos milissegundos
        
     }
 

@@ -66,9 +66,9 @@ int rear(struct Queue* queue)
 } 
 
 
-void fillQueue(Queue* queue) {
+void fillQueue(struct Queue* queue) {
     for (unsigned i = 1; i <= queue->capacity; i++) {
-        makePlaceAvailable(queue, i);
+        enqueue(queue, i);
     }
 }
 

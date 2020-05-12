@@ -1,7 +1,7 @@
 all: program1 program2
 CC = gcc
 CFLAGS = -pthread -Wall
-#args.h args.c Qn.c Un.h reg.c reg.h utils.c utils.h
+#args.h args.c Qn.c Un.h reg.c reg.h utils.c utils.h 
 SRCS = args.c reg.c utils.c
 OBJS = $(SRCS:.c=.o)
 %.o:%.c
