@@ -20,9 +20,6 @@ int fd;
 
 static int flagUn = 0;
 
-
-
-
 void sigalrm_handler(int signo){
 	flagUn = 2;
 	printf("Alarm ringing\n");
@@ -31,9 +28,9 @@ void sigalrm_handler(int signo){
 
 void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
 {
-	//pthread_detach(pthread_self());
+	pthread_detach(pthread_self());
 
-	int fd2;
+	
     time_t t;
     srand((unsigned) time(&t));
     Request request;
@@ -47,7 +44,7 @@ void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
 	char fifo[50];
     fifo_name(request.pid, request.tid, fifo);
     if(mkfifo(fifo, 0660)!=0){
-        perror("error creating private fifo");
+        printf("Error creating private fifo\n");
     }
 
     logWant(request);
@@ -55,17 +52,22 @@ void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
         printf("Error writing request\n"); 
 
     Request answer;
-    fd2 = open(fifo, O_RDONLY);// | O_NONBLOCK);
+    int fd2 = open(fifo, O_RDONLY);// | O_NONBLOCK);
     if(fd2 < 0){
-        perror("Error opening fifo\n");
-        logFailed(request);
-    }
+        printf("Error opening fifo\n");
+		unlink(fifo);
+		logFailed(request);
+	}
 
-    int nread;
-    if((nread=read(fd2, &answer, sizeof(answer))<0){
+    
+    if(read(fd2, &answer, sizeof(answer))<0){
+
         logFailed(request);
-    }
-    if(answer.pl != -1) // se o pedido foi aceite
+		close(fd2);
+		printf("Error reading from fifo\n");
+		return NULL;
+	}
+	if(answer.pl != -1) // se o pedido foi aceite
     {
         logIamIn(answer); 
     }
@@ -73,25 +75,26 @@ void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
     {
         logClosed(answer);
     }
-
+     printf("before close\n");
+    if(close(fd2)!=0){
+        printf("Error fd\n");
+    }
+    printf("After close\n");
+   
     if(unlink(fifo)!=0){
-        printf("error unlink\n");
+        printf("Error unlink\n");
     }
 
     printf("After unlink\n");
-    if(close(fd2)!=0){
-        printf("error fd\n");
-    }
-    printf("After close\n");
+    
+    
 
     //unlink(fifo);
     //close(fd2);
-    /*if(error < 0){
-        perror("Error creating fifo\n");
-    }    
+       /* 
     fd2 = open(fifo, O_RDONLY);// | O_NONBLOCK);
     if(fd2 < 0){
-        perror("Error opening fifo\n");
+        printf("Error opening fifo\n");
     }
 
     Request answer;
@@ -126,11 +129,11 @@ void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
         {
             logClosed(answer);
         }
-    }
+    } */
 
-    close(fd2);
-    unlink(fifo);
-    return NULL;*/
+   /*  close(fd2);
+    unlink(fifo); */
+    return NULL;
 
 }
 
@@ -156,16 +159,16 @@ int main(int argc, char *argv[])
     Args_un arg = process_args_un(argc, argv);
     char public_fifo[20];
     strcpy(public_fifo, arg.fifoname);
-    if(open(public_fifo, O_WRONLY)<0){
-        perror("Fifo name doesn't match with the server fifo name");
+    if(open(public_fifo, O_WRONLY | O_NONBLOCK)<0){
+        printf("Fifo name doesn't match with the server fifo name\n");
         exit(1);
     }
     
     int i = 0;
-    do{
+    /*do{
         
         fd = open(public_fifo, O_WRONLY);
-    } while(fd == -1);
+    } while(fd == -1);*/
 
     if(alarm(arg.nsecs/1000)<0)
         printf("Alarm went wrong\n");
@@ -180,17 +183,17 @@ int main(int argc, char *argv[])
         *pi = i;
         i++;
         while(pthread_create(&tid, NULL, sendRequest, (void *)pi) != 0){
-            printf("Error creating thread");
+            printf("Error creating thread\n");
             usleep(1000);
         }
-        //i++;
+       
         usleep(WAIT_TIME); //terá que ser na ordem dos milissegundos
        
     }
 
     printf("Exited cycle\n");
 
-    close(fd);
+    //close(fd);
 
     
     pthread_exit(0);
