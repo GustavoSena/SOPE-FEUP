@@ -31,9 +31,9 @@ void sigalrm_handler(int signo){
 
 void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
 {
-    
+	//pthread_detach(pthread_self());
 
-    int fd2;
+	int fd2;
     time_t t;
     srand((unsigned) time(&t));
     Request request;
@@ -43,24 +43,54 @@ void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
     request.pl = -1;
     request.dur = (rand() % 11) + 5;
     
-
-
-	
-    logWant(request);
-    write(fd, &request, sizeof(request)); 
    
-
 	char fifo[50];
     fifo_name(request.pid, request.tid, fifo);
-    int error = mkfifo(fifo, 0660);
-    if(error < 0){
-        printf("Exiting\n");
+    if(mkfifo(fifo, 0660)!=0){
+        perror("error creating private fifo");
+    }
 
+    logWant(request);
+    if(write(fd, &request, sizeof(request))<0)
+        printf("Error writing request\n"); 
+
+    Request answer;
+    fd2 = open(fifo, O_RDONLY);// | O_NONBLOCK);
+    if(fd2 < 0){
+        perror("Error opening fifo\n");
+        logFailed(request);
+    }
+
+    int nread;
+    if((nread=read(fd2, &answer, sizeof(answer))<0){
+        logFailed(request);
+    }
+    if(answer.pl != -1) // se o pedido foi aceite
+    {
+        logIamIn(answer); 
+    }
+    else
+    {
+        logClosed(answer);
+    }
+
+    if(unlink(fifo)!=0){
+        printf("error unlink\n");
+    }
+
+    printf("After unlink\n");
+    if(close(fd2)!=0){
+        printf("error fd\n");
+    }
+    printf("After close\n");
+
+    //unlink(fifo);
+    //close(fd2);
+    /*if(error < 0){
         perror("Error creating fifo\n");
     }    
-    fd2 = open(fifo, O_RDONLY | O_NONBLOCK);
+    fd2 = open(fifo, O_RDONLY);// | O_NONBLOCK);
     if(fd2 < 0){
-        printf("Exiting\n");
         perror("Error opening fifo\n");
     }
 
@@ -69,13 +99,15 @@ void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
 
     int error2;
     int n_tries = 0;
+    read(fd2, &answer, sizeof(answer));
     do
     {
-        error2 = read(fd2, &answer,sizeof(answer));
+        error2 = read(fd2, &answer, sizeof(answer));
         n_tries++;
         if(n_tries == 50)
             break;
-        usleep(2000000);
+        usleep(1000000);
+        printf("trying again: %d\n",request.i);
     } while (error2 <= 0);
 
     
@@ -98,13 +130,16 @@ void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
 
     close(fd2);
     unlink(fifo);
-    return NULL;
+    return NULL;*/
 
 }
 
+int *pi = NULL;
 
 int main(int argc, char *argv[])
 {
+
+    setbuf(stdout, NULL);
 
 
     struct sigaction act_alarm;
@@ -123,12 +158,10 @@ int main(int argc, char *argv[])
     strcpy(public_fifo, arg.fifoname);
     if(open(public_fifo, O_WRONLY)<0){
         perror("Fifo name doesn't match with the server fifo name");
-
         exit(1);
     }
     
     int i = 0;
-    int current_time = 0;
     do{
         
         fd = open(public_fifo, O_WRONLY);
@@ -137,12 +170,20 @@ int main(int argc, char *argv[])
     if(alarm(arg.nsecs/1000)<0)
         printf("Alarm went wrong\n");
     
-    while(flagUn!=2)
+    while(1)
     {
+        if(flagUn==2){
+            break;
+        }
         pthread_t tid;
-        pthread_create(&tid, NULL, sendRequest, (void *)&i);
+        pi = (int *) malloc (sizeof (int));
+        *pi = i;
         i++;
-        current_time+=10;
+        while(pthread_create(&tid, NULL, sendRequest, (void *)pi) != 0){
+            printf("Error creating thread");
+            usleep(1000);
+        }
+        //i++;
         usleep(WAIT_TIME); //terá que ser na ordem dos milissegundos
        
     }

@@ -18,19 +18,14 @@
 
 pthread_mutex_t mut=PTHREAD_MUTEX_INITIALIZER;
 
-int pl = 1; //to figure out
-
-
-
-int order;
+int pl = 1;
+int order = 1;
 int limit_wc;
 int limit_threads;
 struct Queue* queue;
 sem_t nthreads;
 sem_t nplaces;
-static int flag = 0;
-
-
+int flag = 0;
 
 
 void sigalarm_handler(int signo){
@@ -40,11 +35,10 @@ void sigalarm_handler(int signo){
 }
 
 void * dealRequest(void * arg) {
-
+    pthread_detach(pthread_self());
    
     int fd;
     Request request = *(Request *) arg;
-    logRecv(request);
     char private_fifo[50];
     fifo_name(request.pid, request.tid, private_fifo);
     request.pid = getpid();
@@ -52,9 +46,8 @@ void * dealRequest(void * arg) {
 
     pthread_mutex_lock(&mut);
 
-    if (flag!=1) //aceitou o pedido
+    if (flag!=1)
     {
-     
         order++;
         request.pl = order;
         logEnter(request);
@@ -71,17 +64,12 @@ void * dealRequest(void * arg) {
     pthread_mutex_unlock(&mut);
     int tries = 0;
     
-    do
-    {
-        fd = open(private_fifo, O_WRONLY);
-        tries++;
-        if (tries == 20){
-            printf("Couldn't open private fifo\n");
-            exit(1);
-		}
-            
-        
-    } while (fd == -1);
+
+    while((fd = open(private_fifo, O_WRONLY))<0){
+        perror("waiting client fifo");
+        usleep(1000);
+    }
+  
     if (limit_threads) { sem_post(&nthreads); }
 
     int place;
@@ -97,8 +85,6 @@ void * dealRequest(void * arg) {
         pthread_mutex_unlock(&mut);
     }
 
-
-    
 
     int error = 0;
     int n_tries = 0;
@@ -118,7 +104,7 @@ void * dealRequest(void * arg) {
                 
             }
             close(fd);
-			return NULL;
+			//return NULL;
 		}
     }while(error <= 0);
 
@@ -134,7 +120,7 @@ void * dealRequest(void * arg) {
         sem_post(&nplaces);
 	}
 
-	return NULL;
+	//return NULL;
 }
 
 int main(int argc, char *argv[])
@@ -156,7 +142,7 @@ int main(int argc, char *argv[])
     char public_fifo[30];
     strcpy(public_fifo, arg.fifoname);
     int fd1;
-    order = 0;
+
    
     if(arg.nplaces)
 		limit_wc = 1;
@@ -164,13 +150,12 @@ int main(int argc, char *argv[])
 	    limit_threads = 1;
 	Request request;
 
-	int error;
-    do{
-        error = mkfifo(public_fifo, 0660);
-        if (error < 0)
-            unlink(public_fifo);
-
-    }while(error<0);
+    if(mkfifo(public_fifo, 0660)!=0){
+        unlink(public_fifo); 
+        if(mkfifo(public_fifo, 0660)!=0){
+            perror("error creating public fifo");
+        }
+    }
 
     fd1 = open(public_fifo, O_RDONLY | O_NONBLOCK);
     
@@ -189,36 +174,28 @@ int main(int argc, char *argv[])
 	alarm(arg.nsecs/1000);
 
 
-    bool read_smt = false;
-    int n_tries = 0;
-	do
+	while(1)
 	{
-        
+
+        if(flag==1){
+            break;
+        }
         if(read(fd1, &request, sizeof(request))>0)
         { 
+            logRecv(request);
             if (limit_threads)  
                 sem_wait(&nthreads);
-            read_smt = true;
-            pthread_create(&tid, NULL, dealRequest, (void *)&request);
+
+            //pthread_create(&tid, NULL, dealRequest, (void *)&request);
             //pthread_join(tid, NULL); 
         } 
-        n_tries++;
-        if(!read_smt)
-            sleep(1);
-        
-        if(n_tries == 20 && !read_smt)
-        {
-            perror("Client fifo name doesn't match with the server fifo name\n");
-            unlink(public_fifo);
-            exit(1);
-        }
   
      
-    } while (flag!=1);
+    } 
 
   
     
-    unlink(public_fifo); //foi mudado de posição
+    unlink(public_fifo); 
 
 
 
