@@ -8,6 +8,8 @@
 #include <sys/wait.h>
 #include <ctype.h>
 #include <pthread.h>
+#include <signal.h>
+#include <semaphore.h>
 #include "args.h"
 #include "utils.h"
 #include "reg.h"
@@ -132,7 +134,8 @@ int main(int argc, char *argv[])
         fd = open(public_fifo, O_WRONLY);
     } while(fd == -1);
 
-    alarm(arg.nsecs/1000);
+    if(alarm(arg.nsecs/1000)<0)
+        printf("Alarm went wrong\n");
     
     while(flagUn!=2)
     {

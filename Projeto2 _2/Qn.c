@@ -9,18 +9,29 @@
 #include <pthread.h>
 #include <stdbool.h>
 #include <signal.h>
+#include <semaphore.h>
 #include "args.h"
 #include "utils.h"
 #include "reg.h"
+#include "queue.h"
 
 
 pthread_mutex_t mut=PTHREAD_MUTEX_INITIALIZER;
+
+int pl = 1; //to figure out
+
+
+
 
 int current_time;
 int max_time;
 int order;
 int occupied_wc;
 int max_wc;
+int max_threads;
+struct Queue* queue;
+sem_t nthreads;
+sem_t nplaces;
 static int flag = 0;
 
 
@@ -43,14 +54,17 @@ void * dealRequest(void * arg) {
     request.pid = getpid();
     request.tid = pthread_self();
 
-    while(occupied_wc == max_wc);
+
+
+
+
+    
+  
 
     pthread_mutex_lock(&mut);
 
     if (flag!=1) //aceitou o pedido
     {
-        
-        
         occupied_wc++;
         order++;
         request.pl = order;
@@ -73,34 +87,66 @@ void * dealRequest(void * arg) {
     {
         fd = open(private_fifo, O_WRONLY);
         tries++;
-        if (tries == 5)
-            break;
-
+        if (tries == 5){
+            printf("Couldn't open private fifo\n");
+            exit(1);
+		}
+            
+        if (max_threads) { sem_post(&nthreads); }
     } while (fd == -1);
 
-    if (tries == 5)
-    {
-        printf("Couldn't open private fifo\n");
-        exit(1);
+
+    int place;
+    if (max_wc) {
+        sem_wait(&nplaces);
+        pthread_mutex_lock(&mut);
+        place = usePlace(&queue);
+        pthread_mutex_unlock(&mut);
+    } else {
+        pthread_mutex_lock(&mut);
+        place = queue;
+        pl++;
+        pthread_mutex_unlock(&mut);
     }
+
+
+
 
     int error = 0;
     int n_tries = 0;
     do{
         error = write(fd, &request, sizeof(request));
         n_tries++;
-        if (n_tries == 50)
-            break;
+        if (n_tries == 5){
+			logGaveUp(request);
 
+            if (max_threads)
+            sem_post(&nthreads);
+            if (max_wc) { 
+                pthread_mutex_lock(&mut);
+                makePlaceAvailable(&queue, place);
+                pthread_mutex_unlock(&mut);
+                sem_post(&nplaces); 
+                
+            }
+            close(fd);
+			return NULL;
+		}
     }while(error <= 0);
 
-    if(n_tries == 50)
-        logGaveUp(request);
-    
     close(fd);
     
+    if (max_threads)
+		sem_post(&nthreads);
+	if (max_wc)
+	{
+		pthread_mutex_lock(&mut);
+        makePlaceAvailable(&queue, place);
+        pthread_mutex_unlock(&mut);
+        sem_post(&nplaces);
+	}
 
-    return NULL;
+	return NULL;
 }
 
 int main(int argc, char *argv[])
@@ -127,21 +173,33 @@ int main(int argc, char *argv[])
     current_time = 0;
     occupied_wc = 0;
     max_wc = arg.nplaces;
-    
-    
-    Request request;
-    int error;
+	max_threads = arg.nthreads;
+	Request request;
+
+	int error;
     do{
         error = mkfifo(public_fifo, 0660);
         if (error < 0)
             unlink(public_fifo);
+
     }while(error<0);
+
     fd1 = open(public_fifo, O_RDONLY | O_NONBLOCK);
     bool read_smt = false;
     int n_tries = 0;
     pthread_t tid;
 	
-    alarm(arg.nsecs/1000);
+
+    if (max_threads) {
+        sem_init(&nthreads, 0, arg.nthreads);
+    }
+    if (max_wc) {
+        sem_init(&nplaces, 0, arg.nplaces);
+        queue = createQueue(arg.nplaces);
+		fillQueue(queue);
+	}
+
+	alarm(arg.nsecs/1000);
 
 
 	do
@@ -158,6 +216,11 @@ int main(int argc, char *argv[])
         n_tries++;
         if(!read_smt)
             sleep(1);
+
+
+
+        if (max_threads)  
+            sem_wait(&nthreads);
 
         if(n_tries == 20 && !read_smt)
         {
@@ -177,7 +240,9 @@ int main(int argc, char *argv[])
 
     while(read(fd1, &request, sizeof(request))>0) //limpar o resto dos pedidos
     {
-       
+        if (max_threads)  
+            sem_wait(&nthreads);
+
         pthread_create(&tid, NULL, dealRequest, (void *)&request);
         //pthread_join(tid,NULL);
     }
