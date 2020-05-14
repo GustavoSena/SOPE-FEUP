@@ -25,7 +25,7 @@ Args_qn process_args_qn(int argc, char *argv[]){
 					perror("Invalid Seconds!");
 					print_usage_qn();
 					exit(1);
-				} else args.nsecs=size*1000;
+				} else args.nsecs=size;
 			}
 			else{
 				perror("Invalid arguments!\n");
@@ -118,7 +118,7 @@ Args_un process_args_un(int argc, char *argv[]){
 					exit(1);
 				} 
 				else {
-					args.nsecs=size*1000;
+					args.nsecs=size;
 }
 			}
 			else{

@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -34,7 +35,7 @@ void sigalarm_handler(int signo){
 
 }
 
-void * dealRequest(void * arg) {
+/*void * oldDealRequest(void * arg) {
     pthread_detach(pthread_self());
    
     int fd;
@@ -70,7 +71,7 @@ void * dealRequest(void * arg) {
         usleep(1000);
     }
   
-    if (limit_threads) { sem_post(&nthreads); }
+    //if (limit_threads) { sem_post(&nthreads); }
 
     int place;
     if (limit_wc) {
@@ -104,7 +105,7 @@ void * dealRequest(void * arg) {
                 
             }
             close(fd);
-			//return NULL;
+			return NULL;
 		}
     }while(error <= 0);
 
@@ -121,7 +122,230 @@ void * dealRequest(void * arg) {
 	}
 
 	//return NULL;
+}*/
+
+/*void *dealRequest(void *arg)
+{
+    int fd;
+    Request request = *(Request *) arg;
+    char private_fifo[50];
+    fifo_name(request.pid, request.tid, private_fifo);
+    request.pid = getpid();
+    request.tid = pthread_self();
+
+    pthread_detach(pthread_self());
+
+    pthread_mutex_lock(&mut);
+
+    if (flag!=1)
+    {
+        order++;
+        request.pl = order;
+        logEnter(request);
+        usleep(request.dur*1000);
+        logTimeUp(request);
+    }
+    else
+    {
+        log2Late(request);
+    }
+
+
+    pthread_mutex_unlock(&mut);
+
+    do{
+        fd = open(private_fifo, O_WRONLY);
+    }while(fd == -1);
+
+
+
+    if (limit_threads) { sem_post(&nthreads); }
+
+    int place;
+    if (limit_wc) {
+        sem_wait(&nplaces);
+        pthread_mutex_lock(&mut);
+        place = dequeue(queue);
+        pthread_mutex_unlock(&mut);
+    } else {
+        pthread_mutex_lock(&mut);
+        place = pl;
+        pl++;
+        pthread_mutex_unlock(&mut);
+    }
+
+
+    int error;
+    do
+    {
+        error = write(fd, &request, sizeof(request));
+
+
+        if (limit_threads)
+            sem_post(&nthreads);
+            if (limit_wc) { 
+                pthread_mutex_lock(&mut);
+                enqueue(queue, place);
+                pthread_mutex_unlock(&mut);
+                sem_post(&nplaces); 
+                
+            }
+
+    } while (error == -1);
+
+
+    if (limit_threads)
+		sem_post(&nthreads);
+	if (limit_wc)
+	{
+		pthread_mutex_lock(&mut);
+        enqueue(queue, place);
+        pthread_mutex_unlock(&mut);
+        sem_post(&nplaces);
+	}
+    
+    close(fd);
+
+    return NULL;
+}*/
+
+void * dealRequest(void * arg) {
+    pthread_detach(pthread_self());
+   
+    int fd;
+    Request request = *(Request *) arg;
+    char private_fifo[50];
+    fifo_name(request.pid, request.tid, private_fifo);
+    request.pid = getpid();
+    request.tid = pthread_self();
+
+	int n_tries = 0;
+	while ((fd = open(private_fifo, O_WRONLY)) < 0)
+	{
+		//printf("Waiting client fifo\n");
+        usleep(1000);
+        if(n_tries++>5){
+            logGaveUp(request);
+            if (limit_threads)
+		        sem_post(&nthreads);
+            return NULL;
+		}
+
+	}
+
+
+    int place;
+    if (limit_wc) {
+        sem_wait(&nplaces);
+        pthread_mutex_lock(&mut);
+        place = dequeue(queue);
+        pthread_mutex_unlock(&mut);
+    } else {
+        pthread_mutex_lock(&mut);
+        place = pl;
+        pl++;
+        pthread_mutex_unlock(&mut);
+    }
+    request.pl = place;
+
+    n_tries = 0;
+    while(write(fd, &request, sizeof(request))<= 0){
+
+		printf("Sending reponse\n");
+		if (n_tries++ > 5)
+		{
+			logGaveUp(request);
+
+            if (limit_threads)
+                sem_post(&nthreads);
+            if (limit_wc) { 
+                pthread_mutex_lock(&mut);
+                enqueue(queue, place);
+                pthread_mutex_unlock(&mut);
+                sem_post(&nplaces); 
+                
+            }
+            close(fd);
+			return NULL;
+		}
+	}
+    
+   
+    logEnter(request);
+    usleep(request.dur*1000);
+    logTimeUp(request);
+       
+       
+   
+
+    close(fd);
+    
+    if (limit_threads)
+		sem_post(&nthreads);
+	if (limit_wc)
+	{
+		pthread_mutex_lock(&mut);
+        enqueue(queue, place);
+        pthread_mutex_unlock(&mut);
+        sem_post(&nplaces);
+	}
+
+	return NULL;
 }
+
+
+void *tooLate(void *arg){
+    //pthread_detach(pthread_self());
+   
+    int fd;
+    Request request = *(Request *) arg;
+    char private_fifo[50];
+    fifo_name(request.pid, request.tid, private_fifo);
+    request.pid = getpid();
+    request.tid = pthread_self();
+	request.pl = -1;
+
+	int n_tries = 0;
+	while ((fd = open(private_fifo, O_WRONLY)) < 0)
+	{
+		//printf("Waiting client fifo\n");
+        usleep(1000);
+        if(n_tries++>1){
+            logGaveUp(request);
+            if (limit_threads)
+		        sem_post(&nthreads);
+            return NULL;
+		}
+
+	}
+  
+
+    n_tries = 0;
+    while(write(fd, &request, sizeof(request))<=0){
+     	printf("Sending reponse\n");
+        if (n_tries++ > 1){
+			logGaveUp(request);
+
+            if (limit_threads)
+                sem_post(&nthreads);
+            close(fd);
+			return NULL;
+		}
+    }
+    
+
+    close(fd);
+    
+    log2Late(request);
+
+    if (limit_threads)
+		sem_post(&nthreads);
+
+
+    return NULL;
+}
+
+
 
 int main(int argc, char *argv[])
 {
@@ -153,9 +377,10 @@ int main(int argc, char *argv[])
     if(mkfifo(public_fifo, 0660)!=0){
         unlink(public_fifo); 
         if(mkfifo(public_fifo, 0660)!=0){
-            perror("error creating public fifo");
-        }
-    }
+            printf("error creating public fifo\n");
+			exit(1);
+		}
+	}
 
     fd1 = open(public_fifo, O_RDONLY | O_NONBLOCK);
     
@@ -171,7 +396,7 @@ int main(int argc, char *argv[])
 		fillQueue(queue);
 	}
 
-	alarm(arg.nsecs/1000);
+	alarm(arg.nsecs);
 
 
 	while(1)
@@ -186,7 +411,7 @@ int main(int argc, char *argv[])
             if (limit_threads)  
                 sem_wait(&nthreads);
 
-            //pthread_create(&tid, NULL, dealRequest, (void *)&request);
+            pthread_create(&tid, NULL, dealRequest, (void *)&request);
             //pthread_join(tid, NULL); 
         } 
   
@@ -195,17 +420,18 @@ int main(int argc, char *argv[])
 
   
     
-    unlink(public_fifo); 
+    unlink(public_fifo);
+	usleep(5e5);
 
 
-
-    while(read(fd1, &request, sizeof(request))>0) //limpar o resto dos pedidos
+	while(read(fd1, &request, sizeof(request))>0) //limpar o resto dos pedidos
     {
         if (limit_threads)  
-            sem_wait(&nthreads);
+            sem_wait(&nthreads); //este pedaço de código está a correr mal
 
-        pthread_create(&tid, NULL, dealRequest, (void *)&request);
-        //pthread_join(tid,NULL);
+        //printf("Entered the second cycle\n");
+        pthread_create(&tid, NULL, tooLate, (void *)&request);
+        pthread_join(tid,NULL);
     }
     
    

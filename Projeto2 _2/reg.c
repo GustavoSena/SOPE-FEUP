@@ -3,9 +3,9 @@
 
 void writeReg(Request rq, char* order){
     if(rq.pl>=0)
-        fprintf(stdout,"%.10ld ; %.5d ; %.6d ; %.15ld ; %.6d ;  %.5d ; %s\n", time(NULL), rq.i, rq.pid ,rq.tid , rq.dur, rq.pl, order);
+        fprintf(stdout,"%.10ld ; %.6d ; %.6d ; %.15ld ; %.6d ;  %.5d ; %s\n", time(NULL), rq.i, rq.pid ,rq.tid , rq.dur, rq.pl, order);
     else
-        fprintf(stdout,"%.10ld ; %.5d ; %.6d ; %.15ld ; %.6d ; %.5d ; %s\n", time(NULL), rq.i, rq.pid ,rq.tid , rq.dur, rq.pl, order);
+        fprintf(stdout,"%.10ld ; %.6d ; %.6d ; %.15ld ; %.6d ; %.5d ; %s\n", time(NULL), rq.i, rq.pid ,rq.tid , rq.dur, rq.pl, order);
     fflush(stdout);
 }
 
