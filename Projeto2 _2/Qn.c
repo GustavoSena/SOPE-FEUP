@@ -49,7 +49,7 @@ void * dealRequest(void * arg) {
 	int n_tries = 0;
 	while ((fd = open(private_fifo, O_WRONLY)) < 0)
 	{
-		//printf("Waiting client fifo\n");
+		
         usleep(1000);
         if(n_tries++>5){
             logGaveUp(request);
@@ -122,7 +122,7 @@ void * dealRequest(void * arg) {
 
 
 void *tooLate(void *arg){
-    //pthread_detach(pthread_self());
+    
    
     int fd;
     Request request = *(Request *) arg;
@@ -135,7 +135,7 @@ void *tooLate(void *arg){
 	int n_tries = 0;
 	while ((fd = open(private_fifo, O_WRONLY)) < 0)
 	{
-		//printf("Waiting client fifo\n");
+		
         usleep(1000);
         if(n_tries++>1){
             logGaveUp(request);
@@ -149,7 +149,7 @@ void *tooLate(void *arg){
 
     n_tries = 0;
     while(write(fd, &request, sizeof(request))<=0){
-     	printf("Sending reponse\n");
+     	
         if (n_tries++ > 1){
 			logGaveUp(request);
 
@@ -204,7 +204,7 @@ int main(int argc, char *argv[])
     if(mkfifo(public_fifo, 0660)!=0){
         unlink(public_fifo); 
         if(mkfifo(public_fifo, 0660)!=0){
-            printf("error creating public fifo\n");
+            perror("error creating public fifo\n");
 			exit(1);
 		}
 	}
@@ -239,7 +239,7 @@ int main(int argc, char *argv[])
                 sem_wait(&nthreads);
 
             pthread_create(&tid, NULL, dealRequest, (void *)&request);
-            //pthread_join(tid, NULL); 
+            
         } 
   
      
@@ -256,7 +256,7 @@ int main(int argc, char *argv[])
         if (limit_threads)  
             sem_wait(&nthreads); 
 
-        //printf("Entered the second cycle\n");
+        
         pthread_create(&tid, NULL, tooLate, (void *)&request);
         pthread_join(tid,NULL);
     }

@@ -47,14 +47,14 @@ void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
 	char fifo[50];
     fifo_name(request.pid, request.tid, fifo);
     if(mkfifo(fifo, 0660)!=0){
-        printf("error creating private fifo\n");
+        perror("error creating private fifo\n");
         logFailed(request);
         return NULL;
 	}
 
 	logWant(request);
     if(write(fd, &request, sizeof(request))<0){
-        printf("Error writing request\n"); 
+        perror("Error writing request\n"); 
         logFailed(request);
         return NULL;
     }
@@ -63,7 +63,7 @@ void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
     Request answer;
     fd2 = open(fifo, O_RDONLY);// | O_NONBLOCK);
     if(fd2 < 0){
-        printf("Error opening fifo\n");
+        perror("Error opening fifo\n");
         logFailed(request);
         return NULL;
     }
@@ -71,7 +71,7 @@ void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
     int nread;
 
     if((nread=read(fd2, &answer, sizeof(answer))<0)){
-        printf("Error reading answer\n");
+        perror("Error reading answer\n");
         logFailed(request);
         return NULL;
     }
@@ -91,7 +91,7 @@ void * sendRequest(void * arg) // arg vai ser número sequencial do pedido
 
     //printf("After unlink\n");
     if(close(fd2)!=0){
-        printf("error fd\n");
+        perror("error fd\n");
     }
     //printf("After close\n");
 
@@ -111,8 +111,20 @@ int main(int argc, char *argv[])
     sigemptyset(&act_alarm.sa_mask);
     act_alarm.sa_flags = 0;
 
+
     if (sigaction(SIGALRM,&act_alarm,NULL) < 0)  {        
         fprintf(stderr,"Unable to install SIGALARM handler\n");        
+        exit(1);  
+    }  
+
+    struct sigaction ignore_sigpipe;
+    ignore_sigpipe.sa_handler = SIG_IGN;
+    sigemptyset(&ignore_sigpipe.sa_mask);
+    ignore_sigpipe.sa_flags = 0;
+
+
+    if (sigaction(SIGPIPE,&ignore_sigpipe,NULL) < 0)  {        
+        fprintf(stderr,"Unable to install SIGPIPE handler\n");        
         exit(1);  
     }  
 
@@ -121,13 +133,13 @@ int main(int argc, char *argv[])
     char public_fifo[20];
     strcpy(public_fifo, arg.fifoname);
     if((fd= open(public_fifo, O_WRONLY))<0){
-        printf("Fifo name doesn't match with the server fifo name\n");
+        perror("Fifo name doesn't match with the server fifo name\n");
         exit(1);
     }
 
 
     if(alarm(arg.nsecs)<0){
-        printf("Alarm went wrong\n");
+        perror("Alarm went wrong\n");
 		exit(1);
 	}
 
@@ -143,14 +155,13 @@ int main(int argc, char *argv[])
 		//i++;
 
 		while(pthread_create(&tid, NULL, sendRequest, (void *)pi) != 0){
-            printf("Error creating thread\n");
+            perror("Error creating thread\n");
             usleep(1000);
         }
         i++;
         usleep(WAIT_TIME); 
     }
 
-    printf("Exited cycle\n");
 
     close(fd);
 
